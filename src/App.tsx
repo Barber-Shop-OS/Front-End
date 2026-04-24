@@ -9,6 +9,7 @@ import {
 import { useAppSelector } from "@/hooks/redux";
 import DashboardPage from "@/pages/DashboardPage";
 import LoginPage from "@/pages/LoginPage";
+import SignupPage from "@/pages/SignupPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 
 const ProtectedRoute = (): JSX.Element => {
@@ -31,6 +32,7 @@ const App = (): JSX.Element => {
       <Routes>
         <Route element={<PublicOnlyRoute />}>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
         </Route>
 
         <Route element={<ProtectedRoute />}>

@@ -4,7 +4,8 @@
 
 Rotas publicas:
 
-- `/login`: autenticacao
+- `/login`: autenticacao de usuario existente
+- `/signup`: cadastro de novo usuario
 
 Rotas privadas (requer autenticacao):
 
@@ -14,7 +15,14 @@ Rotas privadas (requer autenticacao):
 Fluxo:
 
 - Usuario nao autenticado acessando rota privada -> redirecionar para `/login`
-- Usuario autenticado acessando `/login` -> redirecionar para `/dashboard`
+- Usuario autenticado acessando `/login` ou `/signup` -> redirecionar para `/dashboard`
+
+## Documentacao de Autenticacao
+
+- Fluxo detalhado de login com e-mail/senha e Google OAuth:
+  - `docs/auth-login-and-google.md`
+- Fluxo detalhado de cadastro com nome/e-mail/senha e Google OAuth:
+  - `docs/auth-signup.md`
 
 ## Estrutura de Pages
 

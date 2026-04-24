@@ -14,6 +14,26 @@ export interface LoginRequestPayload {
   password: string;
 }
 
+export interface GoogleLoginRequestPayload {
+  provider: 'google';
+  authorizationCode: string;
+  redirectUri: string;
+  source: 'web';
+}
+
+export interface SignupRequestPayload {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface GoogleSignupRequestPayload {
+  provider: 'google';
+  authorizationCode: string;
+  redirectUri: string;
+  source: 'web';
+}
+
 export interface LoginSuccessPayload {
   user: AuthUser;
   tokens: AuthTokens;

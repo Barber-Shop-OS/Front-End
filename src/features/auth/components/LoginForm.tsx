@@ -1,7 +1,5 @@
 import { useState, type FormEvent } from "react";
 
-import Button from "@/components/Button";
-import Input from "@/components/Input";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { loginRequest } from "@/features/auth/slices/authSlice";
 
@@ -18,48 +16,68 @@ const LoginForm = (): JSX.Element => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="w-full max-w-md space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-lg"
-    >
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">
-          Entrar na plataforma
-        </h1>
-        <p className="mt-1 text-sm text-slate-600">
-          Use suas credenciais para acessar o dashboard.
-        </p>
+    <form onSubmit={handleSubmit} className="w-full space-y-6" noValidate>
+      <div className="space-y-2">
+        <label
+          htmlFor="email"
+          className="block text-base font-semibold uppercase tracking-wide text-slate-600"
+        >
+          E-mail
+        </label>
+        <input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          autoComplete="email"
+          placeholder="seu@email.com.br"
+          required
+          className="w-full rounded-lg border border-transparent bg-indigo-50 px-4 py-3.5 text-lg text-slate-700 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+        />
       </div>
 
-      <Input
-        label="E-mail"
-        type="email"
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
-        autoComplete="email"
-        required
-      />
-
-      <Input
-        label="Senha"
-        type="password"
-        value={password}
-        onChange={(event) => setPassword(event.target.value)}
-        autoComplete="current-password"
-        required
-      />
+      <div className="space-y-2">
+        <div className="flex items-center justify-between gap-3">
+          <label
+            htmlFor="password"
+            className="text-base font-semibold uppercase tracking-wide text-slate-600"
+          >
+            Senha
+          </label>
+          <button
+            type="button"
+            className="text-base font-semibold text-blue-700 transition hover:text-blue-800"
+          >
+            Esqueci minha senha
+          </button>
+        </div>
+        <input
+          id="password"
+          type="password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          autoComplete="current-password"
+          placeholder="••••••••"
+          required
+          className="w-full rounded-lg border border-transparent bg-indigo-50 px-4 py-3.5 text-lg text-slate-700 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+        />
+      </div>
 
       {authState.error ? (
-        <p className="text-sm text-red-600">{authState.error}</p>
+        <p className="text-sm text-red-600" role="alert" aria-live="polite">
+          {authState.error}
+        </p>
       ) : null}
 
-      <Button
+      <button
         type="submit"
-        className="w-full"
+        className="inline-flex w-full justify-center rounded-lg bg-gradient-to-r from-blue-700 to-blue-600 px-4 py-3.5 text-base font-bold text-white shadow-sm transition hover:from-blue-800 hover:to-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
         disabled={authState.status === "loading"}
       >
-        {authState.status === "loading" ? "Entrando..." : "Entrar"}
-      </Button>
+        {authState.status === "loading"
+          ? "Entrando..."
+          : "Entrar na Plataforma"}
+      </button>
     </form>
   );
 };

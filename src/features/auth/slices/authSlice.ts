@@ -1,6 +1,13 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import type { AuthState, LoginRequestPayload, LoginSuccessPayload } from '@/types';
+import type {
+  AuthState,
+  GoogleLoginRequestPayload,
+  GoogleSignupRequestPayload,
+  LoginRequestPayload,
+  LoginSuccessPayload,
+  SignupRequestPayload
+} from '@/types';
 
 const initialState: AuthState = {
   user: null,
@@ -17,6 +24,24 @@ const authSlice = createSlice({
       state.status = 'loading';
       state.error = null;
     },
+    loginWithGoogleRequest: (
+      state,
+      _action: PayloadAction<GoogleLoginRequestPayload>
+    ) => {
+      state.status = 'loading';
+      state.error = null;
+    },
+    signupRequest: (state, _action: PayloadAction<SignupRequestPayload>) => {
+      state.status = 'loading';
+      state.error = null;
+    },
+    signupWithGoogleRequest: (
+      state,
+      _action: PayloadAction<GoogleSignupRequestPayload>
+    ) => {
+      state.status = 'loading';
+      state.error = null;
+    },
     loginSuccess: (state, action: PayloadAction<LoginSuccessPayload>) => {
       state.status = 'authenticated';
       state.user = action.payload.user;
@@ -24,6 +49,12 @@ const authSlice = createSlice({
       state.error = null;
     },
     loginFailure: (state, action: PayloadAction<string>) => {
+      state.status = 'unauthenticated';
+      state.user = null;
+      state.tokens = null;
+      state.error = action.payload;
+    },
+    signupFailure: (state, action: PayloadAction<string>) => {
       state.status = 'unauthenticated';
       state.user = null;
       state.tokens = null;
@@ -38,6 +69,15 @@ const authSlice = createSlice({
   }
 });
 
-export const { loginRequest, loginSuccess, loginFailure, logout } = authSlice.actions;
+export const {
+  loginRequest,
+  loginWithGoogleRequest,
+  signupRequest,
+  signupWithGoogleRequest,
+  loginSuccess,
+  loginFailure,
+  signupFailure,
+  logout
+} = authSlice.actions;
 
 export default authSlice.reducer;
