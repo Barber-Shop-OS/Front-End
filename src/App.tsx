@@ -18,6 +18,7 @@ import SearchResultsPage from "@/pages/SearchResultsPage";
 import VerifyEmailPage from "@/pages/VerifyEmailPage";
 import BarbershopPage from "@/pages/BarbershopPage";
 import UserHomePage from "./pages/UserHomePage";
+import BranchPage from "./pages/BranchPage";
 
 // Rotas protegidas e públicas
 const ProtectedRoute = (): JSX.Element => {
@@ -58,6 +59,7 @@ const App = (): JSX.Element => {
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/b/:slug" element={<BarbershopPage />} />
+          <Route path="/filiais/:branchId" element={<BranchPage />} />
         </Route>
 
         {/* 404 */}
