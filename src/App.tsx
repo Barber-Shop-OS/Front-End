@@ -14,6 +14,7 @@ import LoginPage from "@/pages/LoginPage";
 import SignupPage from "@/pages/SignupPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import LandingPage from "@/pages/LandingPage";
+import SearchResultsPage from "@/pages/SearchResultsPage";
 
 // Rotas protegidas e públicas
 const ProtectedRoute = (): JSX.Element => {
@@ -38,6 +39,9 @@ const App = (): JSX.Element => {
       <Routes>
         {/* Landing Page */}
         <Route path="/" element={<LandingPage />} />
+
+        {/* Busca/listagem de barbearias - pública, não exige login */}
+        <Route path="/filiais" element={<SearchResultsPage />} />
 
         {/* Rotas públicas */}
         <Route element={<PublicOnlyRoute />}>
