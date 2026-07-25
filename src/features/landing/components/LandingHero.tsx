@@ -1,63 +1,70 @@
-import { Search } from "lucide-react";
+import { CalendarCheck, TrendingUp } from "lucide-react";
 
 const LandingHero = (): JSX.Element => {
   return (
     <section className="w-full bg-white px-6 py-16 lg:px-12 lg:py-20">
-      <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center">
-        {/* Texto e busca */}
+      <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:items-center">
         <div className="flex flex-col gap-6">
+          <span className="w-fit rounded-full bg-blue-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-blue-600">
+            Feito para barbearias
+          </span>
+
           <h1 className="text-5xl font-extrabold leading-[1.05] text-slate-900 lg:text-6xl">
-            Agende seu corte
+            Gerencie sua barbearia
             <br />
-            <span className="text-blue-600">em segundos</span>
+            <span className="text-blue-600">sem complicação</span>
           </h1>
 
           <p className="max-w-md text-base text-slate-500">
-            A BarberOS conecta você aos melhores profissionais da cidade com a
-            precisão que seu estilo exige.
+            O BarberOS é o sistema completo pra pequenas barbearias controlarem
+            agenda, clientes e financeiro em um só lugar — e ainda oferecerem
+            agendamento online pros seus clientes.
           </p>
 
-          <form className="flex w-full max-w-lg items-center gap-3 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
-            <div className="flex flex-1 items-center gap-2 px-3">
-              <Search className="h-5 w-5 shrink-0 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Buscar por barbearia ou localização..."
-                className="w-full bg-transparent py-2 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none"
-              />
-            </div>
+          <div className="flex flex-wrap items-center gap-4">
             <button
-              type="submit"
-              className="shrink-0 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+              type="button"
+              className="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
             >
-              Agendar agora
+              Teste grátis por 14 dias
             </button>
-          </form>
+            <button
+              type="button"
+              className="rounded-xl border border-slate-200 px-6 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+            >
+              Falar com um consultor
+            </button>
+          </div>
+
+          <p className="text-xs text-slate-400">
+            Sem cartão de crédito. Cancele quando quiser.
+          </p>
         </div>
 
-        {/* Grid de imagens */}
+        {/* Preview do produto */}
         <div className="grid grid-cols-2 gap-4">
           <div className="row-span-2 overflow-hidden rounded-3xl">
             <img
-              src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=800&q=80"
-              alt="Barbeiro cortando cabelo com máquina"
-              className="h-full w-full object-cover"
-            />
-          </div>
-
-          <div className="overflow-hidden rounded-3xl">
-            <img
               src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=800&q=80"
-              alt="Interior de barbearia com cadeiras"
+              alt="Dono de barbearia usando sistema de gestão"
               className="h-full w-full object-cover"
             />
           </div>
 
-          <div className="flex flex-col justify-end rounded-3xl bg-blue-600 p-6 text-white">
-            <span className="text-3xl font-extrabold">Diversos</span>
-            <span className="text-xs font-medium uppercase tracking-wide text-blue-100">
-              Agendamentos diários
-            </span>
+          <div className="flex flex-col justify-between rounded-3xl bg-slate-900 p-5 text-white">
+            <CalendarCheck className="h-6 w-6 text-blue-400" />
+            <div>
+              <p className="text-2xl font-extrabold">+42%</p>
+              <p className="text-xs text-slate-300">agendamentos em 3 meses</p>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-between rounded-3xl bg-blue-600 p-5 text-white">
+            <TrendingUp className="h-6 w-6 text-blue-100" />
+            <div>
+              <p className="text-2xl font-extrabold">1.200+</p>
+              <p className="text-xs text-blue-100">barbearias ativas</p>
+            </div>
           </div>
         </div>
       </div>

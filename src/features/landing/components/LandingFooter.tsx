@@ -20,7 +20,7 @@ const LandingFooter = (): JSX.Element => {
             </a>
           ))}
         </nav>
-        <p>© 2024 Barber OS. A arte da precisão digital.</p>
+        <p>© 2024 Barber OS. Sistema de gestão para barbearias.</p>
       </div>
     </footer>
   );
