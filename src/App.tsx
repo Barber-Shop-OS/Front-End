@@ -15,6 +15,7 @@ import SignupPage from "@/pages/SignupPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import LandingPage from "@/pages/LandingPage";
 import SearchResultsPage from "@/pages/SearchResultsPage";
+import VerifyEmailPage from "@/pages/VerifyEmailPage";
 
 // Rotas protegidas e públicas
 const ProtectedRoute = (): JSX.Element => {
@@ -47,6 +48,7 @@ const App = (): JSX.Element => {
         <Route element={<PublicOnlyRoute />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
         </Route>
 
         {/* Rotas protegidas */}
