@@ -16,6 +16,7 @@ import NotFoundPage from "@/pages/NotFoundPage";
 import LandingPage from "@/pages/LandingPage";
 import SearchResultsPage from "@/pages/SearchResultsPage";
 import VerifyEmailPage from "@/pages/VerifyEmailPage";
+import BarbershopPage from "@/pages/BarbershopPage";
 import UserHomePage from "./pages/UserHomePage";
 
 // Rotas protegidas e públicas
@@ -56,6 +57,7 @@ const App = (): JSX.Element => {
         {/* Rotas protegidas */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/b/:slug" element={<BarbershopPage />} />
         </Route>
 
         {/* 404 */}
