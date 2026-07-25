@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import BarbershopHero from "@/features/barbershop-profile/components/BarbershopHero";
 import BranchesSection, {
@@ -71,13 +71,16 @@ const specialists: Specialist[] = [
 
 const BarbershopPage = (): JSX.Element => {
   const navigate = useNavigate();
+  const { slug } = useParams();
 
-  // TODO: :slug deve vir de useParams() quando a rota /b/:slug existir
-  const handleBookNow = () => navigate("/agendar");
-  const handleSelectBranch = (branchId: string) => navigate(`/filiais/${branchId}`);
-  const handleAddService = (serviceId: string) => navigate(`/agendar?servico=${serviceId}`);
+  const handleBookNow = () => navigate(`/b/${slug}/agendar`);
+  // Filial agora aninhada em /b/:slug/:branchId, mantendo o contexto
+  // de qual barbearia é dona daquela filial na própria URL
+  const handleSelectBranch = (branchId: string) => navigate(`/b/${slug}/${branchId}`);
+  const handleAddService = (serviceId: string) =>
+    navigate(`/b/${slug}/agendar?servico=${serviceId}`);
   const handleSelectSpecialist = (specialistId: string) =>
-    navigate(`/agendar?profissional=${specialistId}`);
+    navigate(`/b/${slug}/agendar?profissional=${specialistId}`);
 
   return (
     <AppLayout>
