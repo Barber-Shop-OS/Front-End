@@ -1,5 +1,3 @@
-import React from "react";
-import { CiSearch } from "react-icons/ci";
 import { CiBellOn } from "react-icons/ci";
 import { IoSettingsOutline } from "react-icons/io5";
 import userProfile from "@/assets/UserNavbar/user-profile.png";
