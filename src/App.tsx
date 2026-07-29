@@ -1,4 +1,4 @@
-// Importando bibliotecas
+
 import {
   BrowserRouter,
   Navigate,
@@ -19,6 +19,7 @@ import VerifyEmailPage from "@/pages/VerifyEmailPage";
 import BarbershopPage from "@/pages/BarbershopPage";
 import UserHomePage from "./pages/UserHomePage";
 import BranchPage from "./pages/BranchPage";
+import DashboardBarberPage from "./pages/DashboardBarberPage";
 
 // Rota protegida - usada pelo DONO/GESTOR da barbearia (área administrativa)
 // TODO: quando o auth slice diferenciar "role" (dono vs cliente final),
@@ -87,6 +88,7 @@ const App = (): JSX.Element => {
         {/* Rotas protegidas - área administrativa do dono/gestor da barbearia */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/dashboard/barber" element={<DashboardBarberPage />} />
         </Route>
 
         {/* 404 */}
