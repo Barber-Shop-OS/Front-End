@@ -1,7 +1,9 @@
 import { Navigate } from "react-router-dom";
 
-function UserHomePage() {
-  return <Navigate to="/cliente" replace />;
+const CustomerRedirect = (): JSX.Element => <Navigate to="/cliente" replace />;
+
+function UserHomePage(): JSX.Element {
+  return <CustomerRedirect />;
 }
 
 export default UserHomePage;

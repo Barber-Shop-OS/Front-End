@@ -159,87 +159,92 @@ const ConcludedVsPendingCard = (): JSX.Element => (
   </div>
 );
 
+const StatsRow = (): JSX.Element => (
+  <div className="inline-flex w-full items-start justify-start gap-4 self-stretch">
+    <StatCard
+      title="AGENDAMENTOS HOJE"
+      value="14"
+      subtitle="+2 em relação a ontem"
+    />
+    <StatCard
+      title="RECEITA HOJE"
+      value="R$ 850"
+      subtitle="+15% em relação a média diária"
+    />
+    <ConcludedVsPendingCard />
+  </div>
+);
+
+const UpcomingAppointmentsSection = (): JSX.Element => (
+  <div className="flex flex-1 flex-col items-start justify-start gap-6">
+    <div className="inline-flex w-full items-end justify-between self-stretch">
+      <div className="flex flex-col items-start justify-start">
+        <h2 className="text-2xl font-bold leading-8 text-gray-900">
+          Próximos Agendamentos
+        </h2>
+      </div>
+      <div className="flex flex-col items-start justify-start">
+        <button
+          type="button"
+          className="text-sm font-medium leading-5 text-blue-700"
+        >
+          Ver todos
+        </button>
+      </div>
+    </div>
+
+    <div className="flex w-full flex-col items-start justify-start gap-4">
+      {appointments.map((appointment) => (
+        <AppointmentCard key={appointment.time} {...appointment} />
+      ))}
+    </div>
+  </div>
+);
+
+const QuickActionsPanel = (): JSX.Element => (
+  <div className="flex w-80 flex-col items-start justify-start gap-6">
+    <div className="flex flex-col items-start justify-start self-stretch opacity-0">
+      <h2 className="text-2xl font-bold leading-8 text-gray-900">
+        Ações Rápidas
+      </h2>
+    </div>
+
+    <div className="flex flex-col items-start justify-start gap-4 self-stretch rounded-lg bg-indigo-50 p-6">
+      <button
+        type="button"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-700 to-blue-600 px-4 py-3"
+      >
+        <div className="flex flex-col items-center justify-start">
+          <div className="h-2 w-2 bg-white" />
+        </div>
+        <span className="text-center text-base font-medium leading-6 text-white">
+          Novo agendamento
+        </span>
+      </button>
+
+      <button
+        type="button"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-300 px-4 py-3"
+      >
+        <div className="flex flex-col items-center justify-start">
+          <div className="h-3 w-3 bg-indigo-900" />
+        </div>
+        <span className="text-center text-base font-medium leading-6 text-indigo-900">
+          Bloquear horário
+        </span>
+      </button>
+    </div>
+  </div>
+);
+
 const DashboardBarberPage = (): JSX.Element => {
   return (
     <DashboardBarberLayout>
-      {/* Stats Row */}
-      <div className="inline-flex w-full items-start justify-start gap-4 self-stretch">
-        <StatCard
-          title="AGENDAMENTOS HOJE"
-          value="14"
-          subtitle="+2 em relação a ontem"
-        />
+      <StatsRow />
 
-        <StatCard
-          title="RECEITA HOJE"
-          value="R$ 850"
-          subtitle="+15% em relação a média diária"
-        />
-
-        <ConcludedVsPendingCard />
-      </div>
-
-      {/* Bottom Section: Appointments + Quick Actions */}
       <div className="inline-flex w-full items-start justify-start gap-8 self-stretch">
-        {/* Próximos Agendamentos */}
-        <div className="flex flex-1 flex-col items-start justify-start gap-6">
-          <div className="inline-flex w-full items-end justify-between self-stretch">
-            <div className="flex flex-col items-start justify-start">
-              <h2 className="text-2xl font-bold leading-8 text-gray-900">
-                Próximos Agendamentos
-              </h2>
-            </div>
-            <div className="flex flex-col items-start justify-start">
-              <button
-                type="button"
-                className="text-sm font-medium leading-5 text-blue-700"
-              >
-                Ver todos
-              </button>
-            </div>
-          </div>
-
-          <div className="flex w-full flex-col items-start justify-start gap-4">
-            {appointments.map((appointment) => (
-              <AppointmentCard key={appointment.time} {...appointment} />
-            ))}
-          </div>
-        </div>
-
-        {/* Ações Rápidas */}
-        <div className="flex w-80 flex-col items-start justify-start gap-6">
-          <div className="flex flex-col items-start justify-start self-stretch opacity-0">
-            <h2 className="text-2xl font-bold leading-8 text-gray-900">
-              Ações Rápidas
-            </h2>
-          </div>
-
-          <div className="flex flex-col items-start justify-start gap-4 self-stretch rounded-lg bg-indigo-50 p-6">
-            <button
-              type="button"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-700 to-blue-600 px-4 py-3"
-            >
-              <div className="flex flex-col items-center justify-start">
-                <div className="h-2 w-2 bg-white" />
-              </div>
-              <span className="text-center text-base font-medium leading-6 text-white">
-                Novo agendamento
-              </span>
-            </button>
-
-            <button
-              type="button"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-300 px-4 py-3"
-            >
-              <div className="flex flex-col items-center justify-start">
-                <div className="h-3 w-3 bg-indigo-900" />
-              </div>
-              <span className="text-center text-base font-medium leading-6 text-indigo-900">
-                Bloquear horário
-              </span>
-            </button>
-          </div>
-        </div>
+        <UpcomingAppointmentsSection />
+        <QuickActionsPanel />
       </div>
     </DashboardBarberLayout>
   );

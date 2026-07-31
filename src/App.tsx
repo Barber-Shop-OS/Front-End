@@ -1,4 +1,3 @@
-
 import {
   BrowserRouter,
   Navigate,
@@ -9,7 +8,7 @@ import {
 
 // Importando hooks e páginas
 import { useAppSelector } from "@/hooks/redux";
-import DashboardPage from "@/pages/DashboardPage";
+import DashboardPage from "@/pages/AdminDashboardPage";
 import LoginPage from "@/pages/LoginPage";
 import SignupPage from "@/pages/SignupPage";
 import NotFoundPage from "@/pages/NotFoundPage";
@@ -18,11 +17,19 @@ import SearchResultsPage from "@/pages/SearchResultsPage";
 import VerifyEmailPage from "@/pages/VerifyEmailPage";
 import BarbershopPage from "@/pages/BarbershopPage";
 import BranchPage from "./pages/BranchPage";
-import DashboardBarberPage from "./pages/DashboardBarberPage";
+import DashboardBarberPage from "./pages/BarbersManagementPage";
 import CustomerHomePage from "./pages/CustomerHomePage";
 import CustomerAppointmentsPage from "./pages/CustomerAppointmentsPage";
 import AppointmentDetailsPage from "./pages/AppointmentDetailsPage";
 import CustomerProfilePage from "./pages/CustomerProfilePage";
+import AdminFinancialPage from "@/pages/AdminFinancialPage";
+import BranchesManagementPage from "@/pages/BranchesManagementPage";
+import ServicesManagementPage from "@/pages/ServicesManagementPage";
+import ClientsPage from "@/pages/ClientsPage";
+import SignatureCheckoutPage from "@/pages/SignatureCheckoutPage";
+import PasswordRecoveryPage from "@/pages/PasswordRecoveryPage";
+import BranchSchedulePage from "@/pages/BranchSchedulePage";
+import BranchRevenuePage from "@/pages/BranchRevenuePage";
 
 // Rota protegida - usada pelo DONO/GESTOR da barbearia (área administrativa)
 // TODO: quando o auth slice diferenciar "role" (dono vs cliente final),
@@ -77,6 +84,7 @@ const App = (): JSX.Element => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/recuperar-senha" element={<PasswordRecoveryPage />} />
         </Route>
 
         {/*
@@ -88,15 +96,35 @@ const App = (): JSX.Element => {
         */}
         <Route path="/user-home" element={<Navigate to="/cliente" replace />} />
         <Route path="/cliente" element={<CustomerHomePage />} />
-        <Route path="/cliente/agendamentos" element={<CustomerAppointmentsPage />} />
-        <Route path="/cliente/agendamentos/:appointmentId" element={<AppointmentDetailsPage />} />
+        <Route
+          path="/cliente/agendamentos"
+          element={<CustomerAppointmentsPage />}
+        />
+        <Route
+          path="/cliente/agendamentos/:appointmentId"
+          element={<AppointmentDetailsPage />}
+        />
         <Route path="/cliente/perfil" element={<CustomerProfilePage />} />
+        <Route path="/assinatura" element={<SignatureCheckoutPage />} />
 
         {/* Rotas protegidas - área administrativa do dono/gestor da barbearia */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/dashboard/barber" element={<DashboardBarberPage />} />
-        </Route>
+        <Route element={<ProtectedRoute />}></Route>
+
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/dashboard/financeiro" element={<AdminFinancialPage />} />
+        <Route path="/dashboard/filiais" element={<BranchesManagementPage />} />
+        <Route path="/dashboard/barber" element={<DashboardBarberPage />} />
+        <Route path="/dashboard/barbeiros" element={<DashboardBarberPage />} />
+        <Route
+          path="/dashboard/servicos"
+          element={<ServicesManagementPage />}
+        />
+        <Route path="/dashboard/clientes" element={<ClientsPage />} />
+        <Route
+          path="/dashboard/agenda-da-filial"
+          element={<BranchSchedulePage />}
+        />
+        <Route path="/dashboard/rendimentos" element={<BranchRevenuePage />} />
 
         {/* 404 */}
         <Route path="*" element={<NotFoundPage />} />
