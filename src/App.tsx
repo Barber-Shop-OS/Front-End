@@ -30,6 +30,10 @@ import SignatureCheckoutPage from "@/pages/SignatureCheckoutPage";
 import PasswordRecoveryPage from "@/pages/PasswordRecoveryPage";
 import BranchSchedulePage from "@/pages/BranchSchedulePage";
 import BranchRevenuePage from "@/pages/BranchRevenuePage";
+import NewAppointmentPage from "@/pages/NewAppointmentPage";
+import NewBranchPage from "@/pages/NewBranchPage";
+import EditBranchPage from "@/pages/EditBranchPage";
+import NewBarberPage from "@/pages/NewBarberPage";
 
 // Rota protegida - usada pelo DONO/GESTOR da barbearia (área administrativa)
 // TODO: quando o auth slice diferenciar "role" (dono vs cliente final),
@@ -109,12 +113,17 @@ const App = (): JSX.Element => {
 
         {/* Rotas protegidas - área administrativa do dono/gestor da barbearia */}
         <Route element={<ProtectedRoute />}></Route>
-
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/dashboard/financeiro" element={<AdminFinancialPage />} />
         <Route path="/dashboard/filiais" element={<BranchesManagementPage />} />
+        <Route path="/dashboard/filiais/nova" element={<NewBranchPage />} />
+        <Route
+          path="/dashboard/filiais/:branchId/editar"
+          element={<EditBranchPage />}
+        />
         <Route path="/dashboard/barber" element={<DashboardBarberPage />} />
         <Route path="/dashboard/barbeiros" element={<DashboardBarberPage />} />
+        <Route path="/dashboard/barbeiros/novo" element={<NewBarberPage />} />
         <Route
           path="/dashboard/servicos"
           element={<ServicesManagementPage />}
@@ -124,8 +133,11 @@ const App = (): JSX.Element => {
           path="/dashboard/agenda-da-filial"
           element={<BranchSchedulePage />}
         />
+        <Route
+          path="/dashboard/agendamentos/novo"
+          element={<NewAppointmentPage />}
+        />
         <Route path="/dashboard/rendimentos" element={<BranchRevenuePage />} />
-
         {/* 404 */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

@@ -1,5 +1,6 @@
 import type { PropsWithChildren, ReactNode } from "react";
 import { Link, NavLink } from "react-router-dom";
+import type { LucideIcon } from "lucide-react";
 import {
   Bell,
   CircleDollarSign,
@@ -13,7 +14,7 @@ import {
   Users,
 } from "lucide-react";
 
-const navItems = [
+const navItems: Array<{ label: string; to: string; icon: LucideIcon }> = [
   { label: "Dashboard", to: "/dashboard", icon: Home },
   { label: "Financeiro", to: "/dashboard/financeiro", icon: CircleDollarSign },
   { label: "Filiais", to: "/dashboard/filiais", icon: Store },
@@ -25,9 +26,12 @@ const navItems = [
 const SidebarItem = ({ label, to, icon: Icon }: (typeof navItems)[number]) => (
   <NavLink
     to={to}
+    end={to === "/dashboard"}
     className={({ isActive }) =>
       `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
-        isActive ? "bg-white text-[#0b4bd8] shadow-sm" : "text-slate-600 hover:bg-white/70"
+        isActive
+          ? "bg-white text-[#0b4bd8] shadow-sm"
+          : "text-slate-600 hover:bg-white/70"
       }`
     }
   >
@@ -60,14 +64,16 @@ const AdminLayout = ({
                 <Scissors className="h-5 w-5" />
               </div>
               <div>
-                <div className="text-2xl font-black text-[#0b4bd8]">BarberOS</div>
+                <div className="text-2xl font-black text-[#0b4bd8]">
+                  BarberOS
+                </div>
                 <div className="text-sm text-slate-500">Gestao de Precisao</div>
               </div>
             </div>
           </div>
 
           <Link
-            to="/dashboard/agenda-da-filial"
+            to="/dashboard/agendamentos/novo"
             className="mb-6 rounded-xl bg-[#0b4bd8] px-4 py-3 text-center font-semibold text-white shadow-lg shadow-blue-600/20"
           >
             + Novo Agendamento
