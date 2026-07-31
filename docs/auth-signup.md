@@ -54,17 +54,14 @@ Payload enviado no cadastro com Google:
 - `redirectUri`: URI usada no OAuth
 - `source`: `web`
 
-## Endpoints esperados
+## Endpoints reais
 
-Arquivo: `src/features/auth/api/authApi.ts`
+Arquivo: `src/features/auth/api/authApi.ts` (delega a `src/services/authService.ts`)
 
-- Cadastro padrao: `POST /auth/signup`
-- Cadastro Google: `POST /auth/google/signup`
-
-Resposta esperada em ambos:
-
-- `user`: `{ id, email, name }`
-- `tokens`: `{ accessToken, refreshToken }`
+- Cadastro padrao: `POST /auth/register`
+  - Resposta: `201 { message, user: { id, name, email, role } }`
+  - O backend NAO retorna token no cadastro. O frontend faz login automatico apos o registro para iniciar a sessao.
+- Cadastro Google: ainda nao existe endpoint no backend atual (a UI mantem o fluxo, mas o `authApi` lanca erro controlado quando `VITE_USE_MOCK_AUTH=false`)
 
 ## Arquivos principais da feature
 

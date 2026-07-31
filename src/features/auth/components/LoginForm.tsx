@@ -7,8 +7,8 @@ const LoginForm = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const authState = useAppSelector((state) => state.auth);
 
-  const [email, setEmail] = useState("admin@saas.com");
-  const [password, setPassword] = useState("1234");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
