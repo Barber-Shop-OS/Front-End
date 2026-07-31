@@ -17,9 +17,12 @@ import LandingPage from "@/pages/LandingPage";
 import SearchResultsPage from "@/pages/SearchResultsPage";
 import VerifyEmailPage from "@/pages/VerifyEmailPage";
 import BarbershopPage from "@/pages/BarbershopPage";
-import UserHomePage from "./pages/UserHomePage";
 import BranchPage from "./pages/BranchPage";
 import DashboardBarberPage from "./pages/DashboardBarberPage";
+import CustomerHomePage from "./pages/CustomerHomePage";
+import CustomerAppointmentsPage from "./pages/CustomerAppointmentsPage";
+import AppointmentDetailsPage from "./pages/AppointmentDetailsPage";
+import CustomerProfilePage from "./pages/CustomerProfilePage";
 
 // Rota protegida - usada pelo DONO/GESTOR da barbearia (área administrativa)
 // TODO: quando o auth slice diferenciar "role" (dono vs cliente final),
@@ -83,7 +86,11 @@ const App = (): JSX.Element => {
           mas ela representa a home de um usuário JÁ logado, então soa
           estranho estar acessível sem autenticação nenhuma.
         */}
-        <Route path="/user-home" element={<UserHomePage />} />
+        <Route path="/user-home" element={<Navigate to="/cliente" replace />} />
+        <Route path="/cliente" element={<CustomerHomePage />} />
+        <Route path="/cliente/agendamentos" element={<CustomerAppointmentsPage />} />
+        <Route path="/cliente/agendamentos/:appointmentId" element={<AppointmentDetailsPage />} />
+        <Route path="/cliente/perfil" element={<CustomerProfilePage />} />
 
         {/* Rotas protegidas - área administrativa do dono/gestor da barbearia */}
         <Route element={<ProtectedRoute />}>

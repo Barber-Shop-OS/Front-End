@@ -1,5 +1,4 @@
 import DashboardBarberLayout from "@/layouts/DashboardBarberLayout";
-import { useAppSelector } from "@/hooks/redux";
 
 const appointments = [
   {
@@ -161,8 +160,6 @@ const ConcludedVsPendingCard = (): JSX.Element => (
 );
 
 const DashboardBarberPage = (): JSX.Element => {
-  const user = useAppSelector((state) => state.auth.user);
-
   return (
     <DashboardBarberLayout>
       {/* Stats Row */}

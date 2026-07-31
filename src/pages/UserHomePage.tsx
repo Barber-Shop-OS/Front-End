@@ -1,11 +1,7 @@
-import NavBar from "@/features/user/components/NavBar";
+import { Navigate } from "react-router-dom";
 
 function UserHomePage() {
-  return (
-    <div>
-      <NavBar></NavBar>
-    </div>
-  );
+  return <Navigate to="/cliente" replace />;
 }
 
 export default UserHomePage;
