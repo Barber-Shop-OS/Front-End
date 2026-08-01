@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { PageCard } from "@/components/ui/PageCard";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 
 export const StatCard = ({
   title,
@@ -15,8 +17,8 @@ export const StatCard = ({
   accent?: boolean;
   className?: string;
 }) => (
-  <div
-    className={`rounded-3xl p-5 shadow-sm ${
+  <PageCard
+    className={`p-5 ${
       accent ? "bg-[#0b4bd8] text-white" : "bg-white"
     } ${className}`}
   >
@@ -30,7 +32,7 @@ export const StatCard = ({
     {subtitle ? (
       <div className="mt-2 text-sm opacity-80">{subtitle}</div>
     ) : null}
-  </div>
+  </PageCard>
 );
 
 export const SectionCard = ({
@@ -47,17 +49,7 @@ export const SectionCard = ({
   className?: string;
 }) => (
   <section className={`rounded-3xl bg-white p-6 shadow-sm ${className}`}>
-    <div className="mb-5 flex items-start justify-between gap-4">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight text-slate-900">
-          {title}
-        </h2>
-        {subtitle ? (
-          <p className="mt-1 text-sm text-slate-500">{subtitle}</p>
-        ) : null}
-      </div>
-      {action}
-    </div>
+    <SectionHeader title={title} subtitle={subtitle} action={action} />
     {children}
   </section>
 );

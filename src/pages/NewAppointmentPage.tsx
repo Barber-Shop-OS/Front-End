@@ -2,42 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import { CalendarDays, Store } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
+<<<<<<< HEAD
 import { selectAuthUser } from "@/features/auth/selectors";
+=======
+import { Field } from "@/components/forms/Field";
+>>>>>>> 68c54b2f76495f5a3256d8b6e9d6bc3e56c80313
 import { useAppSelector } from "@/hooks/redux";
 import api, { normalizeApiError } from "@/services/api";
 import AdminLayout from "@/features/admin/components/AdminLayout";
-
-const Field = ({
-  label,
-  placeholder,
-  icon,
-  value,
-  onChange,
-  type = "text",
-}: {
-  label: string;
-  placeholder: string;
-  icon?: JSX.Element;
-  value: string;
-  onChange: (value: string) => void;
-  type?: string;
-}) => (
-  <label className="block">
-    <span className="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
-      {label}
-    </span>
-    <div className="flex items-center gap-3 rounded-2xl bg-[#f7f8fe] px-4 py-4 ring-1 ring-slate-100">
-      {icon}
-      <input
-        className="w-full bg-transparent outline-none placeholder:text-slate-400"
-        placeholder={placeholder}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        type={type}
-      />
-    </div>
-  </label>
-);
 
 interface BranchOption {
   id: number;
