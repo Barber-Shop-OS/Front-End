@@ -1,20 +1,12 @@
 import type { PropsWithChildren, ReactNode } from "react";
-import { Link, NavLink } from "react-router-dom";
-import type { LucideIcon } from "lucide-react";
-import {
-  Bell,
-  CircleDollarSign,
-  ClipboardList,
-  Home,
-  HelpCircle,
-  LogOut,
-  Scissors,
-  Settings,
-  Store,
-  Users,
-} from "lucide-react";
+import { CircleDollarSign, ClipboardList, Home, LogOut, Scissors, Settings, Store, Users } from "lucide-react";
+import { Link } from "react-router-dom";
 
-const navItems: Array<{ label: string; to: string; icon: LucideIcon }> = [
+import { WorkspaceShell } from "@/components/layout/WorkspaceShell";
+import { SidebarNav } from "@/components/navigation/SidebarNav";
+import { TopBar } from "@/components/navigation/TopBar";
+
+const navItems = [
   { label: "Dashboard", to: "/dashboard", icon: Home },
   { label: "Financeiro", to: "/dashboard/financeiro", icon: CircleDollarSign },
   { label: "Filiais", to: "/dashboard/filiais", icon: Store },
@@ -22,23 +14,6 @@ const navItems: Array<{ label: string; to: string; icon: LucideIcon }> = [
   { label: "Servicos", to: "/dashboard/servicos", icon: ClipboardList },
   { label: "Clientes", to: "/dashboard/clientes", icon: Users },
 ];
-
-const SidebarItem = ({ label, to, icon: Icon }: (typeof navItems)[number]) => (
-  <NavLink
-    to={to}
-    end={to === "/dashboard"}
-    className={({ isActive }) =>
-      `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
-        isActive
-          ? "bg-white text-[#0b4bd8] shadow-sm"
-          : "text-slate-600 hover:bg-white/70"
-      }`
-    }
-  >
-    <Icon className="h-4 w-4" />
-    {label}
-  </NavLink>
-);
 
 interface AdminLayoutProps extends PropsWithChildren {
   title?: string;
@@ -55,8 +30,8 @@ const AdminLayout = ({
   topLabel,
 }: AdminLayoutProps): JSX.Element => {
   return (
-    <div className="min-h-screen bg-[#f7f8fe] text-slate-900">
-      <div className="flex min-h-screen">
+    <WorkspaceShell
+      sidebar={
         <aside className="hidden w-64 flex-col border-r border-slate-100 bg-[#eef2ff] px-4 py-5 lg:flex">
           <div className="mb-8">
             <div className="flex items-center gap-2">
@@ -64,9 +39,7 @@ const AdminLayout = ({
                 <Scissors className="h-5 w-5" />
               </div>
               <div>
-                <div className="text-2xl font-black text-[#0b4bd8]">
-                  BarberOS
-                </div>
+                <div className="text-2xl font-black text-[#0b4bd8]">BarberOS</div>
                 <div className="text-sm text-slate-500">Gestao de Precisao</div>
               </div>
             </div>
@@ -79,11 +52,7 @@ const AdminLayout = ({
             + Novo Agendamento
           </Link>
 
-          <nav className="space-y-2">
-            {navItems.map((item) => (
-              <SidebarItem key={item.label} {...item} />
-            ))}
-          </nav>
+          <SidebarNav items={navItems} />
 
           <div className="mt-auto space-y-2 border-t border-slate-200 pt-6">
             <Link
@@ -102,47 +71,16 @@ const AdminLayout = ({
             </Link>
           </div>
         </aside>
-
-        <main className="flex-1">
-          <header className="flex h-16 items-center justify-between border-b border-slate-100 bg-white/80 px-4 backdrop-blur lg:px-8">
-            <div className="text-sm font-semibold text-[#0b4bd8]">
-              {topLabel ?? title ?? "Dashboard"}
-            </div>
-            <div className="flex items-center gap-3">
-              <button type="button" className="text-slate-500">
-                <Bell className="h-5 w-5" />
-              </button>
-              <button type="button" className="text-slate-500">
-                <HelpCircle className="h-5 w-5" />
-              </button>
-              <div className="h-10 w-10 overflow-hidden rounded-full bg-slate-900" />
-            </div>
-          </header>
-
-          <div className="px-4 py-8 lg:px-8">
-            {(title || subtitle || action) && (
-              <div className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
-                <div>
-                  {title ? (
-                    <h1 className="text-4xl font-black tracking-tight text-slate-900">
-                      {title}
-                    </h1>
-                  ) : null}
-                  {subtitle ? (
-                    <p className="mt-2 max-w-3xl text-lg text-slate-600">
-                      {subtitle}
-                    </p>
-                  ) : null}
-                </div>
-                {action}
-              </div>
-            )}
-            <div className="max-w-[1280px]">{children}</div>
-          </div>
-        </main>
-      </div>
-    </div>
+      }
+      topbar={<TopBar label={topLabel ?? title ?? "Dashboard"} />}
+      title={title}
+      subtitle={subtitle}
+      action={action}
+    >
+      {children}
+    </WorkspaceShell>
   );
 };
 
 export default AdminLayout;
+

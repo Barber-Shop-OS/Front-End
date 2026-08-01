@@ -1,5 +1,6 @@
 import { ArrowRight, Filter, Search } from "lucide-react";
 import AdminLayout from "@/features/admin/components/AdminLayout";
+import { PageCard } from "@/components/ui/PageCard";
 
 const clients = [
   ["Alexandre Silva", "+55 11 99999-1234", "12 Out 2023", "24"],
@@ -24,7 +25,8 @@ const ClientsPage = (): JSX.Element => (
       </button>
     </div>
 
-    <div className="space-y-4">
+    <PageCard className="p-4">
+      <div className="space-y-4">
       {clients.map((client) => (
         <div
           key={client[0]}
@@ -56,7 +58,8 @@ const ClientsPage = (): JSX.Element => (
           </div>
         </div>
       ))}
-    </div>
+      </div>
+    </PageCard>
   </AdminLayout>
 );
 
