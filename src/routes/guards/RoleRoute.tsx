@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 
 import FullScreenLoader from "@/components/FullScreenLoader";
+import { selectAuthRole, selectAuthStatus } from "@/features/auth/selectors";
 import { useAppSelector } from "@/hooks/redux";
 import type { UserRole } from "@/types";
 import { DEFAULT_HOME, ROLE_HOME } from "./constants";
@@ -24,8 +25,8 @@ const RoleRoute = ({
   allowedRoles,
   fallbackPath,
 }: RoleRouteProps): JSX.Element => {
-  const status = useAppSelector((state) => state.auth.status);
-  const userRole = useAppSelector((state) => state.auth.user?.role);
+  const status = useAppSelector(selectAuthStatus);
+  const userRole = useAppSelector(selectAuthRole);
 
   if (status === "idle" || status === "loading") {
     return <FullScreenLoader />;

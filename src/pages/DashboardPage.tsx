@@ -1,8 +1,9 @@
-import DashboardLayout from "@/layouts/DashboardLayout";
+import { selectAuthUser } from "@/features/auth/selectors";
 import { useAppSelector } from "@/hooks/redux";
+import DashboardLayout from "@/layouts/DashboardLayout";
 
 const DashboardPage = (): JSX.Element => {
-  const user = useAppSelector((state) => state.auth.user);
+  const user = useAppSelector(selectAuthUser);
 
   return (
     <DashboardLayout>

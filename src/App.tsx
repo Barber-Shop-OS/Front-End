@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { BrowserRouter, useLocation, useNavigate } from "react-router-dom";
 
+import { selectAuthStatus } from "@/features/auth/selectors";
 import {
   bootstrapSessionRequest,
   logout,
@@ -21,7 +22,7 @@ const AuthBootstrap = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const status = useAppSelector((state) => state.auth.status);
+  const status = useAppSelector(selectAuthStatus);
 
   // Bootstrap de sessão (valida token persistido via GET /auth/me).
   useEffect(() => {

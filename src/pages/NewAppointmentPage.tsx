@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { CalendarDays, Store } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
+import { selectAuthUser } from "@/features/auth/selectors";
 import { useAppSelector } from "@/hooks/redux";
 import api, { normalizeApiError } from "@/services/api";
 import AdminLayout from "@/features/admin/components/AdminLayout";
@@ -56,7 +57,8 @@ interface ServiceOption {
 
 const NewAppointmentPage = (): JSX.Element => {
   const navigate = useNavigate();
-  const authUserId = useAppSelector((state) => state.auth.user?.id);
+  const authUser = useAppSelector(selectAuthUser);
+  const authUserId = authUser?.id;
   const [branches, setBranches] = useState<BranchOption[]>([]);
   const [barbers, setBarbers] = useState<BarberOption[]>([]);
   const [services, setServices] = useState<ServiceOption[]>([]);

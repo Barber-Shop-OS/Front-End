@@ -20,27 +20,22 @@ import rootReducer, { type RootReducerState } from './rootReducer';
 import rootSaga from './rootSaga';
 
 /**
- * Persiste apenas `user` e `tokens` do estado de auth.
+ * Persiste apenas os dados essenciais da sessão (`user` e `tokens`).
  * Flags efêmeras (`status`, `error`) são reconstruídas a partir do
- * initialState na reidratação.
+ * initialState do slice na reidratação.
+ *
+ * O transform é aplicado ao estado de cada slice incluído no whitelist
+ * (aqui apenas `auth`), portanto `inboundState` já é um `AuthState`.
  */
 const authSanitizeTransform = createTransform(
-  (inboundState: unknown) => {
-    const root = inboundState as RootReducerState;
-
-    if (root.auth) {
-      return {
-        ...root,
-        auth: {
-          user: root.auth.user,
-          tokens: root.auth.tokens
-        }
-      };
-    }
-
-    return root;
-  },
-  (outboundState: unknown) => outboundState
+  (inboundState: { user?: unknown; tokens?: unknown }) => ({
+    user: inboundState.user ?? null,
+    tokens: inboundState.tokens ?? null
+  }),
+  (outboundState: { user?: unknown; tokens?: unknown }) => ({
+    user: outboundState.user ?? null,
+    tokens: outboundState.tokens ?? null
+  })
 );
 
 const persistConfig: PersistConfig<RootReducerState> = {

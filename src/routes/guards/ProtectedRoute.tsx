@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 
 import FullScreenLoader from "@/components/FullScreenLoader";
+import { selectAuthStatus } from "@/features/auth/selectors";
 import { useAppSelector } from "@/hooks/redux";
 
 /**
@@ -10,7 +11,7 @@ import { useAppSelector } from "@/hooks/redux";
  * - Caso contrário, redireciona para /login.
  */
 const ProtectedRoute = (): JSX.Element => {
-  const status = useAppSelector((state) => state.auth.status);
+  const status = useAppSelector(selectAuthStatus);
 
   if (status === "idle" || status === "loading") {
     return <FullScreenLoader />;
