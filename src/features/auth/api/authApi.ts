@@ -1,4 +1,5 @@
-import api from '@/services/api';
+import { USE_MOCK_AUTH } from '@/config/api';
+import { getMe, login, register } from '@/services/authService';
 import type {
   GoogleLoginRequestPayload,
   GoogleSignupRequestPayload,
@@ -7,12 +8,26 @@ import type {
   SignupRequestPayload
 } from '@/types';
 
-const AUTH_LOGIN_ENDPOINT = '/auth/login';
-const AUTH_GOOGLE_LOGIN_ENDPOINT = '/auth/google/login';
-const AUTH_SIGNUP_ENDPOINT = '/auth/signup';
-const AUTH_GOOGLE_SIGNUP_ENDPOINT = '/auth/google/signup';
+/**
+ * Camada de API da feature de autenticação.
+ *
+ * Usa `authService` (que por sua vez usa o cliente HTTP centralizado em
+ * `src/services/http.ts`). Quando `VITE_USE_MOCK_AUTH=true`, devolve dados
+ * simulados no mesmo formato normalizado para não quebrar o fluxo.
+ */
 
-const useMockAuth = import.meta.env.VITE_USE_MOCK_AUTH === 'true';
+const createMockUser = (
+  payload: Pick<SignupRequestPayload, 'name' | 'email'>
+): LoginSuccessPayload => ({
+  user: {
+    id: 'u-' + Date.now(),
+    email: payload.email,
+    name: payload.name
+  },
+  tokens: {
+    accessToken: 'mock-access-token'
+  }
+});
 
 const mockLogin = async (
   payload: LoginRequestPayload
@@ -25,43 +40,37 @@ const mockLogin = async (
     throw new Error('Credenciais invalidas.');
   }
 
-  return {
-    user: {
-      id: 'u-1000',
-      email: payload.email,
-      name: 'Usuario SaaS'
-    },
-    tokens: {
-      accessToken: 'mock-access-token',
-      refreshToken: 'mock-refresh-token'
-    }
-  };
+  return createMockUser({ name: 'Usuario SaaS', email: payload.email });
 };
 
 export const authApi = {
   login: async (payload: LoginRequestPayload): Promise<LoginSuccessPayload> => {
-    if (useMockAuth) {
+    if (USE_MOCK_AUTH) {
       return mockLogin(payload);
     }
 
-    const response = await api.post<LoginSuccessPayload>(AUTH_LOGIN_ENDPOINT, payload);
-    return response.data;
+    const result = await login(payload);
+    return {
+      user: result.user,
+      tokens: { accessToken: result.token }
+    };
   },
   loginWithGoogle: async (
-    payload: GoogleLoginRequestPayload
+    _payload: GoogleLoginRequestPayload
   ): Promise<LoginSuccessPayload> => {
-    if (useMockAuth) {
-      return mockLogin({ email: 'google.user@saas.com', password: 'mock-google-login' });
+    if (USE_MOCK_AUTH) {
+      return createMockUser({
+        name: 'Google User',
+        email: 'google.user@saas.com'
+      });
     }
 
-    const response = await api.post<LoginSuccessPayload>(
-      AUTH_GOOGLE_LOGIN_ENDPOINT,
-      payload
-    );
-    return response.data;
+    // O backend atual não possui endpoint de Google OAuth.
+    // Mantido para não quebrar o fluxo da UI até o backend disponibilizar.
+    throw new Error('Login com Google indisponível no backend atual.');
   },
   signup: async (payload: SignupRequestPayload): Promise<LoginSuccessPayload> => {
-    if (useMockAuth) {
+    if (USE_MOCK_AUTH) {
       await new Promise((resolve) => {
         setTimeout(resolve, 700);
       });
@@ -70,48 +79,43 @@ export const authApi = {
         throw new Error('Dados invalidos para cadastro.');
       }
 
-      return {
-        user: {
-          id: 'u-' + Date.now(),
-          email: payload.email,
-          name: payload.name
-        },
-        tokens: {
-          accessToken: 'mock-access-token',
-          refreshToken: 'mock-refresh-token'
-        }
-      };
+      return createMockUser({ name: payload.name, email: payload.email });
     }
 
-    const response = await api.post<LoginSuccessPayload>(
-      AUTH_SIGNUP_ENDPOINT,
-      payload
-    );
-    return response.data;
+    // O backend não retorna token no register. Após cadastrar, faz login
+    // automático para iniciar a sessão.
+    const user = await register(payload);
+    const result = await login({ email: payload.email, password: payload.password });
+
+    return {
+      user: { ...user, role: result.user.role },
+      tokens: { accessToken: result.token }
+    };
   },
   signupWithGoogle: async (
-    payload: GoogleSignupRequestPayload
+    _payload: GoogleSignupRequestPayload
   ): Promise<LoginSuccessPayload> => {
-    if (useMockAuth) {
-      return {
-        user: {
-          id: 'u-' + Date.now(),
-          email: 'google.signup@saas.com',
-          name: 'Google User'
-        },
-        tokens: {
-          accessToken: 'mock-access-token',
-          refreshToken: 'mock-refresh-token'
-        }
-      };
+    if (USE_MOCK_AUTH) {
+      return createMockUser({
+        name: 'Google User',
+        email: 'google.signup@saas.com'
+      });
     }
 
-    const response = await api.post<LoginSuccessPayload>(
-      AUTH_GOOGLE_SIGNUP_ENDPOINT,
-      payload
-    );
-    return response.data;
+    throw new Error('Cadastro com Google indisponível no backend atual.');
+  },
+  getMe: async (): Promise<LoginSuccessPayload> => {
+    if (USE_MOCK_AUTH) {
+      return createMockUser({ name: 'Usuario SaaS', email: 'mock@saas.com' });
+    }
+
+    const user = await getMe();
+    return {
+      user,
+      tokens: { accessToken: '' }
+    };
   }
 };
 
 export default authApi;
+

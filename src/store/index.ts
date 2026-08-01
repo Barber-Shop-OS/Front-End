@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import {
   persistStore,
   persistReducer,
+  createTransform,
   FLUSH,
   REHYDRATE,
   PAUSE,
@@ -13,15 +14,40 @@ import {
 import storage from 'redux-persist/lib/storage';
 import createSagaMiddleware from 'redux-saga';
 
-import { setAccessTokenGetter } from '@/services/api';
+import { setAccessTokenGetter } from '@/services/http';
 
 import rootReducer, { type RootReducerState } from './rootReducer';
 import rootSaga from './rootSaga';
 
+/**
+ * Persiste apenas `user` e `tokens` do estado de auth.
+ * Flags efêmeras (`status`, `error`) são reconstruídas a partir do
+ * initialState na reidratação.
+ */
+const authSanitizeTransform = createTransform(
+  (inboundState: unknown) => {
+    const root = inboundState as RootReducerState;
+
+    if (root.auth) {
+      return {
+        ...root,
+        auth: {
+          user: root.auth.user,
+          tokens: root.auth.tokens
+        }
+      };
+    }
+
+    return root;
+  },
+  (outboundState: unknown) => outboundState
+);
+
 const persistConfig: PersistConfig<RootReducerState> = {
   key: 'root',
   storage,
-  whitelist: ['auth']
+  whitelist: ['auth'],
+  transforms: [authSanitizeTransform]
 };
 
 const sagaMiddleware = createSagaMiddleware();
@@ -46,3 +72,4 @@ setAccessTokenGetter(() => store.getState().auth.tokens?.accessToken ?? null);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
