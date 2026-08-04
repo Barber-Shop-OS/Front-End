@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const CtaBanner = (): JSX.Element => {
   return (
     <section className="w-full bg-white px-6 pb-20 lg:px-12">
@@ -10,12 +12,12 @@ const CtaBanner = (): JSX.Element => {
           com o BarberOS.
         </p>
 
-        <button
-          type="button"
-          className="mt-8 rounded-xl bg-white px-8 py-3 text-sm font-bold text-blue-600 shadow-lg transition-transform hover:scale-105"
+        <Link
+          to="/signup"
+          className="mt-8 inline-block rounded-xl bg-white px-8 py-3 text-sm font-bold text-blue-600 shadow-lg transition-transform hover:scale-105"
         >
           Teste grátis por 14 dias
-        </button>
+        </Link>
       </div>
     </section>
   );

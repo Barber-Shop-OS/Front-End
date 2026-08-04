@@ -6,6 +6,7 @@ import {
 import { startGoogleOAuthCodeFlow } from "@/features/auth/utils/googleAuth";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { useNavigate } from "react-router-dom";
+import { GOOGLE_CLIENT_ID } from "@/config/api";
 
 const SignupAccessPanel = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -13,7 +14,7 @@ const SignupAccessPanel = (): JSX.Element => {
   const navigate = useNavigate();
 
   const handleGoogleSignup = async (): Promise<void> => {
-    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const clientId = GOOGLE_CLIENT_ID;
 
     if (!clientId) {
       dispatch(

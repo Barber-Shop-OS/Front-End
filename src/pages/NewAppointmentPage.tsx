@@ -2,11 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { CalendarDays, Store } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
-<<<<<<< HEAD
+
 import { selectAuthUser } from "@/features/auth/selectors";
-=======
 import { Field } from "@/components/forms/Field";
->>>>>>> 68c54b2f76495f5a3256d8b6e9d6bc3e56c80313
 import { useAppSelector } from "@/hooks/redux";
 import api, { normalizeApiError } from "@/services/api";
 import AdminLayout from "@/features/admin/components/AdminLayout";

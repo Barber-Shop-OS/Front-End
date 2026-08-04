@@ -5,13 +5,15 @@ import {
 } from "@/features/auth/slices/authSlice";
 import { startGoogleOAuthCodeFlow } from "@/features/auth/utils/googleAuth";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { GOOGLE_CLIENT_ID } from "@/config/api";
+import { Link } from "react-router-dom";
 
 const LoginAccessPanel = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const authState = useAppSelector((state) => state.auth);
 
   const handleGoogleLogin = async (): Promise<void> => {
-    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const clientId = GOOGLE_CLIENT_ID;
 
     if (!clientId) {
       dispatch(
@@ -96,12 +98,12 @@ const LoginAccessPanel = (): JSX.Element => {
           <span className="font-medium text-gray-700">
             Ainda não possui acesso?
           </span>
-          <button
-            type="button"
+<Link
+            to="/signup"
             className="font-bold text-blue-700 hover:text-blue-800"
           >
             Criar conta
-          </button>
+          </Link>
         </footer>
       </article>
     </section>

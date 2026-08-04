@@ -1,4 +1,5 @@
 import { Check } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface Plan {
   name: string;
@@ -108,16 +109,16 @@ const PricingSection = (): JSX.Element => {
                 ))}
               </ul>
 
-              <button
-                type="button"
-                className={`mt-auto rounded-xl py-3 text-sm font-semibold transition-colors ${
+              <Link
+                to="/assinatura"
+                className={`mt-auto rounded-xl py-3 text-center text-sm font-semibold transition-colors ${
                   plan.highlighted
                     ? "bg-white text-blue-600 hover:bg-blue-50"
                     : "bg-blue-600 text-white hover:bg-blue-700"
                 }`}
               >
                 Começar agora
-              </button>
+              </Link>
             </div>
           ))}
         </div>

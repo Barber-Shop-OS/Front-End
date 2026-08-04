@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { Link } from "react-router-dom";
 
 import { selectAuthError, selectAuthStatus } from "@/features/auth/selectors";
 import { loginRequest } from "@/features/auth/slices/authSlice";
@@ -46,12 +47,12 @@ const LoginForm = (): JSX.Element => {
           >
             Senha
           </label>
-          <button
-            type="button"
+<Link
+            to="/recuperar-senha"
             className="text-base font-semibold text-blue-700 transition hover:text-blue-800"
           >
             Esqueci minha senha
-          </button>
+          </Link>
         </div>
         <input
           id="password"

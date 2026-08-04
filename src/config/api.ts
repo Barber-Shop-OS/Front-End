@@ -26,5 +26,5 @@ export const USE_MOCK_AUTH: boolean =
 
 /** Client ID do Google OAuth. */
 export const GOOGLE_CLIENT_ID: string | undefined =
-  import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  import.meta.env.VITE_GOOGLE_CLIENT_ID ?? "644338454460-60sdpois6ijhitqv81plildvsdesqvs9.apps.googleusercontent.com";
 
