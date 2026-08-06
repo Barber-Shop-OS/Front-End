@@ -17,8 +17,9 @@ import LandingPage from "@/pages/LandingPage";
 import SearchResultsPage from "@/pages/SearchResultsPage";
 import VerifyEmailPage from "@/pages/VerifyEmailPage";
 import BarbershopPage from "@/pages/BarbershopPage";
-import UserHomePage from "./pages/UserHomePage";
-import BranchPage from "./pages/BranchPage";
+import UserHomePage from "@/pages/UserHomePage";
+import BranchPage from "@/pages/BranchPage";
+import SelectBarberPage from "@/pages/SelectBarberPage";
 
 // Rota protegida - usada pelo DONO/GESTOR da barbearia (área administrativa)
 // TODO: quando o auth slice diferenciar "role" (dono vs cliente final),
@@ -67,6 +68,7 @@ const App = (): JSX.Element => {
         */}
         <Route path="/b/:slug" element={<BarbershopPage />} />
         <Route path="/b/:slug/:branchId" element={<BranchPage />} />
+        <Route path="/b/:slug/agendar" element={<SelectBarberPage />} />
 
         {/* Rotas públicas de autenticação */}
         <Route element={<PublicOnlyRoute />}>
