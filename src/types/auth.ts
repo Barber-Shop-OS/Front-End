@@ -1,12 +1,15 @@
+export type UserRole = "customer" | "barber" | "owner";
+
 export interface AuthUser {
   id: string;
   email: string;
   name: string;
+  role?: UserRole;
 }
 
 export interface AuthTokens {
   accessToken: string;
-  refreshToken: string;
+  refreshToken?: string;
 }
 
 export interface LoginRequestPayload {

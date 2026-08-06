@@ -1,11 +1,13 @@
 import { useState, type FormEvent } from "react";
 
-import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { selectAuthError, selectAuthStatus } from "@/features/auth/selectors";
 import { signupRequest } from "@/features/auth/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 
 const SignupForm = (): JSX.Element => {
   const dispatch = useAppDispatch();
-  const authState = useAppSelector((state) => state.auth);
+  const status = useAppSelector(selectAuthStatus);
+  const error = useAppSelector(selectAuthError);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -75,18 +77,18 @@ const SignupForm = (): JSX.Element => {
         />
       </div>
 
-      {authState.error ? (
+      {error ? (
         <p className="text-sm text-red-600" role="alert" aria-live="polite">
-          {authState.error}
+          {error}
         </p>
       ) : null}
 
       <button
         type="submit"
         className="inline-flex w-full justify-center items-center gap-2 rounded-lg bg-gradient-to-r from-blue-700 to-blue-600 px-4 py-3.5 text-sm font-bold text-white shadow-sm transition hover:from-blue-800 hover:to-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-        disabled={authState.status === "loading"}
+        disabled={status === "loading"}
       >
-        {authState.status === "loading" ? "Criando Conta..." : "Criar Conta"}
+        {status === "loading" ? "Criando Conta..." : "Criar Conta"}
         <span
           className="inline-flex h-3 w-3 bg-white rounded-full"
           aria-hidden="true"

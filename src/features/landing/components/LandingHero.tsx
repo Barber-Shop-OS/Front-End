@@ -1,4 +1,5 @@
 import { CalendarCheck, TrendingUp } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const LandingHero = (): JSX.Element => {
   return (
@@ -21,19 +22,19 @@ const LandingHero = (): JSX.Element => {
             agendamento online pros seus clientes.
           </p>
 
-          <div className="flex flex-wrap items-center gap-4">
-            <button
-              type="button"
+<div className="flex flex-wrap items-center gap-4">
+            <Link
+              to="/signup"
               className="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
             >
               Teste grátis por 14 dias
-            </button>
-            <button
-              type="button"
+            </Link>
+            <Link
+              to="/assinatura"
               className="rounded-xl border border-slate-200 px-6 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
             >
-              Falar com um consultor
-            </button>
+              Ver planos
+            </Link>
           </div>
 
           <p className="text-xs text-slate-400">

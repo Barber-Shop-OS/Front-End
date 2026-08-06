@@ -1,14 +1,17 @@
 import { useState, type FormEvent } from "react";
+import { Link } from "react-router-dom";
 
-import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { selectAuthError, selectAuthStatus } from "@/features/auth/selectors";
 import { loginRequest } from "@/features/auth/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 
 const LoginForm = (): JSX.Element => {
   const dispatch = useAppDispatch();
-  const authState = useAppSelector((state) => state.auth);
+  const status = useAppSelector(selectAuthStatus);
+  const error = useAppSelector(selectAuthError);
 
-  const [email, setEmail] = useState("admin@saas.com");
-  const [password, setPassword] = useState("1234");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
@@ -44,12 +47,12 @@ const LoginForm = (): JSX.Element => {
           >
             Senha
           </label>
-          <button
-            type="button"
+<Link
+            to="/recuperar-senha"
             className="text-base font-semibold text-blue-700 transition hover:text-blue-800"
           >
             Esqueci minha senha
-          </button>
+          </Link>
         </div>
         <input
           id="password"
@@ -63,20 +66,18 @@ const LoginForm = (): JSX.Element => {
         />
       </div>
 
-      {authState.error ? (
+      {error ? (
         <p className="text-sm text-red-600" role="alert" aria-live="polite">
-          {authState.error}
+          {error}
         </p>
       ) : null}
 
       <button
         type="submit"
         className="inline-flex w-full justify-center rounded-lg bg-gradient-to-r from-blue-700 to-blue-600 px-4 py-3.5 text-base font-bold text-white shadow-sm transition hover:from-blue-800 hover:to-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-        disabled={authState.status === "loading"}
+        disabled={status === "loading"}
       >
-        {authState.status === "loading"
-          ? "Entrando..."
-          : "Entrar na Plataforma"}
+        {status === "loading" ? "Entrando..." : "Entrar na Plataforma"}
       </button>
     </form>
   );

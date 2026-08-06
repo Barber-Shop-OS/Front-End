@@ -49,19 +49,29 @@ npm run deploy
 
 ## Ambiente
 
-Crie um arquivo `.env` na raiz do projeto, se necessário, com as variáveis abaixo:
+Copie `.env.example` para `.env` e ajuste os valores, se necessário:
 
 ```bash
-VITE_API_URL=http://localhost:3000/api
-VITE_USE_MOCK_AUTH=true
+cp .env.example .env
+```
+
+```bash
+VITE_API_BASE_URL=http://localhost:3000
+VITE_USE_MOCK_AUTH=false
 VITE_GOOGLE_CLIENT_ID=seu_client_id_google
 ```
 
 ### Variáveis
 
-- `VITE_API_URL`: URL base da API. Se não for definida, o app usa `http://localhost:3000/api`.
-- `VITE_USE_MOCK_AUTH`: quando `true`, o fluxo de autenticação usa mocks locais.
+- `VITE_API_BASE_URL`: URL base da API (apenas origem). Se não for definida, o app usa `http://localhost:3000`. O prefixo `/api` é adicionado automaticamente pela camada de configuração (`src/config/api.ts`).
+- `VITE_USE_MOCK_AUTH`: quando `true`, o fluxo de autenticação usa mocks locais (sem backend).
 - `VITE_GOOGLE_CLIENT_ID`: habilita o login e cadastro com Google.
+
+Para publicar em outro ambiente, a única alteração necessária é o valor de `VITE_API_BASE_URL`, ex.:
+
+```bash
+VITE_API_BASE_URL=https://api.meudominio.com
+```
 
 ## Rodando Localmente
 
