@@ -1,9 +1,8 @@
 import type { PropsWithChildren } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Bell, Home, Menu, Scissors, Settings, User } from "lucide-react";
+import { Bell, Home, Menu, Scissors, Search, Settings, User } from "lucide-react";
 
 import userProfile from "@/assets/UserNavbar/user-profile.png";
-import { CiSearch } from "react-icons/ci";
 
 const navItems = [
   { label: "Início", to: "/cliente", icon: Home },
@@ -18,7 +17,7 @@ const CustomerHeader = (): JSX.Element => (
         BarberOS
       </Link>
       <div className="hidden w-[620px] items-center gap-3 rounded-xl bg-[#f0f3ff] px-4 py-2 text-slate-500 md:flex">
-        <CiSearch className="h-4 w-4" />
+        <Search className="h-4 w-4" />
         <span className="text-sm">Buscar barbearias ou serviços...</span>
       </div>
     </div>

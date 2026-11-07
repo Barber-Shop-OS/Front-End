@@ -1,7 +1,5 @@
-import { CiBellOn } from "react-icons/ci";
-import { IoSettingsOutline } from "react-icons/io5";
+import { Bell, Search, Settings } from "lucide-react";
 import userProfile from "@/assets/UserNavbar/user-profile.png";
-import { IoIosSearch } from "react-icons/io";
 
 function NavBar() {
   return (
@@ -9,7 +7,7 @@ function NavBar() {
       <div className="flex flex-row items-center gap-4">
         <h1 className="text-1xl font-bold text-[#004AC6]">BarberOS</h1>
         <div className="relative">
-          <IoIosSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-[#434655]" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#434655]" />
           <input
             type="text"
             placeholder="Buscar barbearias ou serviços..."
@@ -19,8 +17,8 @@ function NavBar() {
       </div>
 
       <div className="flex flex-row items-center gap-4">
-        <CiBellOn className="text-[#434655] text-2xl" />
-        <IoSettingsOutline className="text-[#434655] text-2xl" />
+        <Bell className="h-6 w-6 text-[#434655]" />
+        <Settings className="h-6 w-6 text-[#434655]" />
         <img
           src={userProfile}
           alt="Avatar"

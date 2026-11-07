@@ -7,7 +7,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { MdMarkEmailRead } from "react-icons/md";
+import { MailCheck } from "lucide-react";
 
 const CODE_LENGTH = 6;
 
@@ -126,7 +126,7 @@ function VerifyEmailPage(): JSX.Element {
 
       <section className="flex w-full max-w-[400px] flex-col items-center gap-5 rounded-[12px] bg-[#FFFFFF] p-5 shadow-sm">
         <div className="flex h-[80px] w-[80px] items-center justify-center rounded-[12px] bg-[#E1E8FD]">
-          <MdMarkEmailRead className="text-4xl text-[#004AC6]" />
+          <MailCheck className="h-9 w-9 text-[#004AC6]" />
         </div>
 
         <h2 className="text-center text-xl font-bold text-[#434655]">
