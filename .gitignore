@@ -5,3 +5,12 @@ dist
 *.log
 *.local
 coverage
+
+# FE-04: artefatos gerados pelo tsc -b e cópias de conflito do OneDrive
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+*-my-pc.*
+.env
+.env.*
+!.env.example
