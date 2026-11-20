@@ -4,21 +4,39 @@
 
 :root {
   color-scheme: light;
+  -webkit-text-size-adjust: 100%;
 }
 
-* {
-  box-sizing: border-box;
+html,
+body,
+#root {
+  min-height: 100%;
 }
 
 body {
   margin: 0;
-  min-height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #0f172a;
-  background: radial-gradient(circle at top, #f0fdf4 0%, #f8fafc 35%, #f1f5f9 100%);
+  @apply bg-surface font-sans text-slate-900 antialiased;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* Safari iOS: inputs com fonte < 16px dão zoom ao focar (FE-31). */
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+@media (min-width: 768px) {
+  input,
+  select,
+  textarea {
+    font-size: 14px;
+  }
+}
+
+:focus-visible {
+  @apply outline-none ring-2 ring-primary-500 ring-offset-2;
 }

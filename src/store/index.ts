@@ -1,70 +1,32 @@
+// Store: sessão (auth) + cache de dados do servidor (RTK Query). Nada persiste em localStorage
+// (FE-37 / SEC-15): a sessão volta pelo cookie httpOnly de refresh.
 import { configureStore } from '@reduxjs/toolkit';
-import {
-  persistStore,
-  persistReducer,
-  createTransform,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-  type PersistConfig
-} from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import createSagaMiddleware from 'redux-saga';
+import { setupListeners } from '@reduxjs/toolkit/query';
 
-import { setAccessTokenGetter } from '@/services/http';
+import authReducer, { sessionExpired } from '@/features/auth/authSlice';
+import { activeContextReducer } from '@/features/workspace/activeContextSlice';
+import { baseApi } from '@/services/baseApi';
+import { setSessionExpiredHandler } from '@/services/http';
 
-import rootReducer, { type RootReducerState } from './rootReducer';
-import rootSaga from './rootSaga';
+export const createStore = () =>
+  configureStore({
+    reducer: {
+      auth: authReducer,
+      activeContext: activeContextReducer,
+      [baseApi.reducerPath]: baseApi.reducer,
+    },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(baseApi.middleware),
+  });
 
-/**
- * Persiste apenas os dados essenciais da sessão (`user` e `tokens`).
- * Flags efêmeras (`status`, `error`) são reconstruídas a partir do
- * initialState do slice na reidratação.
- *
- * O transform é aplicado ao estado de cada slice incluído no whitelist
- * (aqui apenas `auth`), portanto `inboundState` já é um `AuthState`.
- */
-const authSanitizeTransform = createTransform(
-  (inboundState: { user?: unknown; tokens?: unknown }) => ({
-    user: inboundState.user ?? null,
-    tokens: inboundState.tokens ?? null
-  }),
-  (outboundState: { user?: unknown; tokens?: unknown }) => ({
-    user: outboundState.user ?? null,
-    tokens: outboundState.tokens ?? null
-  })
-);
+export const store = createStore();
+setupListeners(store.dispatch);
 
-const persistConfig: PersistConfig<RootReducerState> = {
-  key: 'root',
-  storage,
-  whitelist: ['auth'],
-  transforms: [authSanitizeTransform]
-};
-
-const sagaMiddleware = createSagaMiddleware();
-
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
-export const store = configureStore({
-  reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
-      }
-    }).concat(sagaMiddleware)
+// Refresh falhou (sessão expirada/revogada): limpa a sessão; os guards levam ao /login.
+setSessionExpiredHandler(() => {
+  store.dispatch(sessionExpired());
+  store.dispatch(baseApi.util.resetApiState());
 });
 
-export const persistor = persistStore(store);
-
-sagaMiddleware.run(rootSaga);
-
-setAccessTokenGetter(() => store.getState().auth.tokens?.accessToken ?? null);
-
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
-
+export type AppStore = ReturnType<typeof createStore>;
+export type RootState = ReturnType<AppStore['getState']>;
+export type AppDispatch = AppStore['dispatch'];

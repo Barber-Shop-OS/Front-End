@@ -1,18 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
 
 import App from '@/App';
-import { persistor, store } from '@/store';
+import { ToastProvider } from '@/components/ui';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { store } from '@/store';
 import '@/index.css';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <App />
-      </PersistGate>
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <ToastProvider>
+          <App />
+        </ToastProvider>
+      </Provider>
+    </ErrorBoundary>
   </React.StrictMode>
 );

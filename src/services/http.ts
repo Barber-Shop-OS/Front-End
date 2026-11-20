@@ -1,94 +1,120 @@
-import axios, { AxiosError } from 'axios';
+// Cliente HTTP (Axios) da API.
+// FE-37: access token só em memória; em 401 tenta POST /auth/refresh UMA vez (requisições
+// concorrentes esperam o mesmo refresh) e repete a original. Refresh falhou → sessão encerrada.
+// O refresh token fica em cookie httpOnly (BE-30); por isso `withCredentials` e o header
+// X-Requested-With (proteção CSRF exigida pela API).
+import axios, { AxiosError, type AxiosRequestConfig, type InternalAxiosRequestConfig } from 'axios';
 
-import { API_URL } from '@/config/api';
+import { API_URL, AUTH_URL } from '@/config/env';
 
 export interface ApiError {
   status: number;
   message: string;
+  code?: string;
+  details?: unknown;
 }
 
-/** Extrai a mensagem de erro no formato `{ message: string }` do backend. */
-const extractErrorMessage = (value: unknown): string | null => {
-  if (typeof value === 'object' && value !== null && 'message' in value) {
-    const message = (value as { message: unknown }).message;
-    return typeof message === 'string' ? message : null;
-  }
+export const isApiError = (value: unknown): value is ApiError =>
+  typeof value === 'object' && value !== null && 'status' in value && 'message' in value;
 
-  return null;
-};
-
-/**
- * Normaliza qualquer erro em um `ApiError` consistente.
- * - Erros do Axios: usa `error.response.data.message` quando existir.
- * - Erros desconhecidos: retorna erro genérico 500.
- */
+/** Converte qualquer erro em ApiError { status, message, code, details }. */
 export const normalizeApiError = (error: unknown): ApiError => {
+  if (isApiError(error)) return error;
   if (error instanceof AxiosError) {
-    const apiMessage = extractErrorMessage(error.response?.data);
-
+    const data = error.response?.data as { message?: unknown; code?: unknown; details?: unknown } | undefined;
+    if (!error.response) {
+      return { status: 0, message: 'Sem conexão com o servidor. Verifique sua internet.', code: 'NETWORK_ERROR' };
+    }
     return {
-      status: error.response?.status ?? 500,
-      message: apiMessage ?? error.message
+      status: error.response.status,
+      message: typeof data?.message === 'string' ? data.message : 'Algo deu errado. Tente novamente.',
+      code: typeof data?.code === 'string' ? data.code : undefined,
+      details: data?.details,
     };
   }
-
-  return {
-    status: 500,
-    message: 'Unexpected API error.'
-  };
+  return { status: 500, message: 'Erro inesperado.', code: 'INTERNAL' };
 };
 
-let accessTokenGetter: () => string | null = () => null;
-
-/**
- * Registra a função que retorna o token de acesso atual.
- * Chamado uma única vez no bootstrap da store.
- */
-export const setAccessTokenGetter = (getter: () => string | null): void => {
-  accessTokenGetter = getter;
+let accessToken: string | null = null;
+export const getAccessToken = (): string | null => accessToken;
+export const setAccessToken = (token: string | null): void => {
+  accessToken = token;
 };
 
-let unauthorizedHandler: (() => void) | null = null;
-
-/**
- * Registra o callback executado quando qualquer requisição recebe 401.
- * Usado para limpar a sessão e redirecionar para /login.
- */
-export const setUnauthorizedHandler = (handler: (() => void) | null): void => {
-  unauthorizedHandler = handler;
+let sessionExpiredHandler: (() => void) | null = null;
+/** Chamado quando o refresh falha (sessão realmente expirada). */
+export const setSessionExpiredHandler = (handler: (() => void) | null): void => {
+  sessionExpiredHandler = handler;
 };
 
-/** Cliente HTTP centralizado (Axios) com interceptors de autenticação. */
 const http = axios.create({
   baseURL: API_URL,
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json'
-  }
+  timeout: 15000,
+  withCredentials: true,
+  headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
 });
 
-http.interceptors.request.use((config) => {
-  const token = accessTokenGetter();
+/** Chamadas de sessão vão para /api/auth (onde o cookie de refresh vale). */
+export const authHttp = axios.create({
+  baseURL: AUTH_URL,
+  timeout: 15000,
+  withCredentials: true,
+  headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+});
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
+const attachToken = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
+  if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
   return config;
-});
+};
+http.interceptors.request.use(attachToken);
+authHttp.interceptors.request.use(attachToken);
+
+let refreshing: Promise<string | null> | null = null;
+
+/** Renova o access token (uma chamada por vez; as demais aguardam a mesma promessa). */
+export const refreshAccessToken = (): Promise<string | null> => {
+  if (!refreshing) {
+    refreshing = authHttp
+      .post<{ token: string }>('/refresh')
+      .then((response) => {
+        setAccessToken(response.data.token);
+        return response.data.token;
+      })
+      .catch(() => {
+        setAccessToken(null);
+        return null;
+      })
+      .finally(() => {
+        refreshing = null;
+      });
+  }
+  return refreshing;
+};
+
+type RetriableConfig = AxiosRequestConfig & { _retried?: boolean };
 
 http.interceptors.response.use(
   (response) => response,
-  (error: unknown) => {
-    const apiError = normalizeApiError(error);
-
-    if (apiError.status === 401) {
-      unauthorizedHandler?.();
+  async (error: unknown) => {
+    if (error instanceof AxiosError && error.response?.status === 401 && error.config) {
+      const original = error.config as RetriableConfig;
+      if (!original._retried) {
+        original._retried = true;
+        const token = await refreshAccessToken();
+        if (token) {
+          original.headers = { ...(original.headers || {}), Authorization: `Bearer ${token}` };
+          return http.request(original);
+        }
+        sessionExpiredHandler?.();
+      }
     }
-
-    return Promise.reject(apiError);
+    return Promise.reject(normalizeApiError(error));
   }
 );
 
-export default http;
+authHttp.interceptors.response.use(
+  (response) => response,
+  (error: unknown) => Promise.reject(normalizeApiError(error))
+);
 
+export default http;
