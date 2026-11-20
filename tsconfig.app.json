@@ -36,9 +36,6 @@
   ],
   "exclude": [
     "src/redux-persist-example",
-    "src/features/booking/components/BarberCard.tsx",
-    "src/features/booking/components/BookingSidebar.tsx",
-    "src/features/booking/components/BookingSummaryBar.tsx",
     "**/*-my-pc.*"
   ]
 }

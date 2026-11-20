@@ -11,7 +11,7 @@ export const Spinner = ({ className }: { className?: string }) => (
 
 export const FullScreenLoader = ({ label = 'Carregando…' }: { label?: string }) => (
   <div className="flex min-h-screen items-center justify-center bg-surface" role="status" aria-live="polite">
-    <div className="flex flex-col items-center gap-3 text-slate-600">
+    <div className="flex flex-col items-center gap-3 text-ink-variant">
       <Spinner className="h-8 w-8 text-primary-600" />
       <span className="text-sm">{label}</span>
     </div>
@@ -19,7 +19,7 @@ export const FullScreenLoader = ({ label = 'Carregando…' }: { label?: string }
 );
 
 export const Skeleton = ({ className }: { className?: string }) => (
-  <div className={cn('animate-pulse rounded-lg bg-slate-200/80', className ?? 'h-4 w-full')} aria-hidden="true" />
+  <div className={cn('animate-pulse rounded-lg bg-surface-high', className ?? 'h-4 w-full')} aria-hidden="true" />
 );
 
 export const ListSkeleton = ({ rows = 4 }: { rows?: number }) => (
@@ -39,10 +39,10 @@ interface EmptyStateProps {
 }
 
 export const EmptyState = ({ title, description, icon, action, className }: EmptyStateProps) => (
-  <div className={cn('flex flex-col items-center rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-10 text-center', className)}>
-    {icon ? <div className="mb-3 text-slate-400">{icon}</div> : null}
-    <p className="text-base font-semibold text-slate-800">{title}</p>
-    {description ? <p className="mt-1 max-w-md text-sm text-muted">{description}</p> : null}
+  <div className={cn('flex flex-col items-center rounded-xl border border-dashed border-outline-variant bg-white px-6 py-10 text-center', className)}>
+    {icon ? <div className="mb-3 text-ink-subtle">{icon}</div> : null}
+    <p className="text-base font-semibold text-ink">{title}</p>
+    {description ? <p className="mt-1 max-w-md text-sm text-ink-variant">{description}</p> : null}
     {action ? <div className="mt-5">{action}</div> : null}
   </div>
 );
@@ -55,7 +55,7 @@ interface ErrorStateProps {
 }
 
 export const ErrorState = ({ error, title = 'Não foi possível carregar', onRetry, className }: ErrorStateProps) => (
-  <div className={cn('flex flex-col items-center rounded-2xl border border-danger-600/20 bg-danger-50 px-6 py-8 text-center', className)} role="alert">
+  <div className={cn('flex flex-col items-center rounded-xl border border-danger-600/20 bg-danger-50 px-6 py-8 text-center', className)} role="alert">
     <AlertCircle className="mb-2 h-6 w-6 text-danger-600" aria-hidden="true" />
     <p className="font-semibold text-danger-700">{title}</p>
     <p className="mt-1 text-sm text-danger-700/80">{apiErrorMessage(error)}</p>

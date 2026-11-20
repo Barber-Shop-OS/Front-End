@@ -35,7 +35,7 @@ export interface MeBarbershop {
   slug: string;
   status: string;
   logo_url: string | null;
-  membership: 'owner' | 'manager';
+  membership: 'owner' | 'manager' | 'receptionist';
   branch_ids: number[] | null;
 }
 

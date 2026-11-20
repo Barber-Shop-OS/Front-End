@@ -7,15 +7,16 @@ import type { Me } from '@/types/api';
 
 import { logout } from './authSlice';
 
-export type Area = 'owner' | 'barber' | 'customer' | 'admin';
+export type Area = 'owner' | 'barber' | 'frontdesk' | 'customer' | 'admin';
 
-/** Áreas a que o usuário tem acesso (dono/gerente, barbeiro, cliente, admin). */
+/** Áreas a que o usuário tem acesso (dono/gerente, barbeiro, atendimento/recepção, cliente, admin). */
 export const areasOf = (user: Me | null): Area[] => {
   if (!user) return [];
   const areas: Area[] = [];
   if (user.role === 'admin') areas.push('admin');
-  if (user.role === 'owner' || user.barbershops.length > 0) areas.push('owner');
+  if (user.role === 'owner' || user.barbershops.some((shop) => shop.membership !== 'receptionist')) areas.push('owner');
   if (user.role === 'barbeiro' || user.barber_profiles.length > 0) areas.push('barber');
+  if (user.barbershops.some((shop) => shop.membership === 'receptionist')) areas.push('frontdesk');
   areas.push('customer');
   return areas;
 };
@@ -26,6 +27,7 @@ export const homePathFor = (user: Me | null): string => {
   if (areas.includes('admin')) return '/admin';
   if (areas.includes('owner')) return '/dashboard';
   if (areas.includes('barber')) return '/barbeiro';
+  if (areas.includes('frontdesk')) return '/atendimento';
   return '/cliente';
 };
 

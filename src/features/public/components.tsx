@@ -1,5 +1,5 @@
 // Peças das páginas públicas: endereço, horário de funcionamento, cabeçalho da barbearia.
-import { Instagram, MapPin, MessageCircle, Phone, Share2 } from 'lucide-react';
+import { AtSign, MapPin, MessageCircle, Phone, Share2 } from 'lucide-react';
 
 import { Avatar, Badge, useToast } from '@/components/ui';
 import type { Address, OpeningHour, PublicBarbershop } from '@/types/api';
@@ -85,7 +85,7 @@ export const ShopHero = ({ shop }: { shop: PublicBarbershop }) => {
             ) : null}
             {shop.instagram ? (
               <a href={`https://instagram.com/${shop.instagram.replace('@', '')}`} target="_blank" rel="noreferrer" className="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-300 px-3 text-sm font-semibold text-slate-700 hover:bg-slate-50">
-                <Instagram className="h-4 w-4" /> Instagram
+                <AtSign className="h-4 w-4" /> Instagram
               </a>
             ) : null}
             <button type="button" onClick={share} className="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-300 px-3 text-sm font-semibold text-slate-700 hover:bg-slate-50">

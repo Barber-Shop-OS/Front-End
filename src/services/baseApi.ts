@@ -44,6 +44,7 @@ export const baseApi = createApi({
     'Member',
     'Session',
     'Admin',
+    'Notification',
   ],
   endpoints: () => ({}),
 });

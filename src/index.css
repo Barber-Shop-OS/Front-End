@@ -15,7 +15,7 @@ body,
 
 body {
   margin: 0;
-  @apply bg-surface font-sans text-slate-900 antialiased;
+  @apply bg-surface font-sans text-ink antialiased;
 }
 
 a {
@@ -38,5 +38,5 @@ textarea {
 }
 
 :focus-visible {
-  @apply outline-none ring-2 ring-primary-500 ring-offset-2;
+  @apply outline-none ring-2 ring-primary-600 ring-offset-2;
 }

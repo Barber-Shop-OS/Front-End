@@ -51,7 +51,7 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
               'pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-xl px-4 py-3 text-sm shadow-lg',
               item.tone === 'success' && 'bg-success-700 text-white',
               item.tone === 'error' && 'bg-danger-700 text-white',
-              item.tone === 'info' && 'bg-slate-900 text-white'
+              item.tone === 'info' && 'bg-inverse-surface text-inverse-on'
             )}
           >
             {item.tone === 'success' ? <CheckCircle2 className="h-5 w-5 shrink-0" aria-hidden="true" /> : item.tone === 'error' ? <AlertCircle className="h-5 w-5 shrink-0" aria-hidden="true" /> : <Info className="h-5 w-5 shrink-0" aria-hidden="true" />}

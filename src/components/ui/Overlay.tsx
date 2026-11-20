@@ -36,7 +36,7 @@ export const Modal = ({ open, onClose, title, children, footer, size = 'md' }: M
 
   if (!open) return null;
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/50 p-0 sm:items-center sm:p-4">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/40 p-0 sm:items-center sm:p-4">
       <button type="button" aria-label="Fechar" className="absolute inset-0 cursor-default" onClick={onClose} tabIndex={-1} />
       <div
         ref={dialogRef}
@@ -45,18 +45,18 @@ export const Modal = ({ open, onClose, title, children, footer, size = 'md' }: M
         aria-label={title}
         tabIndex={-1}
         className={cn(
-          'relative z-10 flex max-h-[92vh] w-full flex-col rounded-t-2xl bg-white shadow-xl sm:rounded-2xl',
+          'relative z-10 flex max-h-[92vh] w-full flex-col rounded-t-2xl bg-white shadow-xl sm:rounded-xl',
           size === 'sm' ? 'sm:max-w-md' : size === 'lg' ? 'sm:max-w-3xl' : 'sm:max-w-xl'
         )}
       >
-        <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-          <h2 className="text-lg font-bold text-slate-900">{title}</h2>
-          <button type="button" onClick={onClose} className="rounded-lg p-1 text-slate-500 hover:bg-slate-100" aria-label="Fechar">
+        <div className="flex items-center justify-between border-b border-surface-low px-5 py-4">
+          <h2 className="text-lg font-bold text-ink">{title}</h2>
+          <button type="button" onClick={onClose} className="rounded-lg p-1 text-ink-subtle hover:bg-surface-low" aria-label="Fechar">
             <X className="h-5 w-5" />
           </button>
         </div>
         <div className="overflow-y-auto px-5 py-4">{children}</div>
-        {footer ? <div className="flex flex-col-reverse gap-2 border-t border-slate-100 px-5 py-4 sm:flex-row sm:justify-end">{footer}</div> : null}
+        {footer ? <div className="flex flex-col-reverse gap-2 border-t border-surface-low px-5 py-4 sm:flex-row sm:justify-end">{footer}</div> : null}
       </div>
     </div>,
     document.body
@@ -104,7 +104,7 @@ export const ConfirmDialog = ({
       </>
     }
   >
-    {description ? <div className="text-sm text-slate-600">{description}</div> : null}
+    {description ? <div className="text-sm text-ink-variant">{description}</div> : null}
     {children}
   </Modal>
 );

@@ -21,11 +21,17 @@ export interface ActiveContext {
   setBranch: (id: number | null) => void;
 }
 
-export const useActiveContext = (): ActiveContext => {
+/**
+ * @param scope 'owner' (padrão) considera barbearias de dono/gerente; 'frontdesk' as de recepcionista (BE-49).
+ */
+export const useActiveContext = (scope: 'owner' | 'frontdesk' = 'owner'): ActiveContext => {
   const dispatch = useAppDispatch();
   const { user } = useAuth();
   const stored = useAppSelector((state) => state.activeContext);
-  const barbershops = useMemo(() => user?.barbershops ?? [], [user]);
+  const barbershops = useMemo(
+    () => (user?.barbershops ?? []).filter((shop) => (scope === 'frontdesk' ? shop.membership === 'receptionist' : shop.membership !== 'receptionist')),
+    [user, scope]
+  );
 
   const barbershop = barbershops.find((shop) => shop.id === stored.barbershopId) ?? barbershops[0] ?? null;
   const { data, isLoading } = useListBranchesQuery(barbershop ? { barbershop_id: barbershop.id, include_inactive: true } : skipToken);

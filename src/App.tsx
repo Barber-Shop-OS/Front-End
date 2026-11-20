@@ -1,4 +1,5 @@
-// Rotas do BarberOS (FE-01/FE-07): grupos por perfil, cada página carregada sob demanda.
+// Rotas do BarberOS: grupos por perfil, cada página carregada sob demanda. Mapa tela-do-Figma → rota em
+// docs/SCREEN_INVENTORY.md.
 import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
@@ -11,7 +12,8 @@ import WorkspaceLayout from '@/layouts/WorkspaceLayout';
 import { PublicOnly, RequireAuth } from '@/routes/guards';
 import { ScrollToTop } from '@/routes/ScrollToTop';
 
-const page = (loader: () => Promise<{ default: React.ComponentType }>) => lazy(loader);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const page = <P extends Record<string, any>,>(loader: () => Promise<{ default: React.ComponentType<P> }>) => lazy(loader);
 
 // Públicas
 const LandingPage = page(() => import('@/pages/public/LandingPage'));
@@ -46,24 +48,36 @@ const NewAppointmentPage = page(() => import('@/pages/owner/NewAppointmentPage')
 const ClientsPage = page(() => import('@/pages/owner/ClientsPage'));
 const ClientDetailPage = page(() => import('@/pages/owner/ClientDetailPage'));
 const FinancialPage = page(() => import('@/pages/owner/FinancialPage'));
+const BranchEarningsPage = page(() => import('@/pages/owner/BranchEarningsPage'));
 const BranchesPage = page(() => import('@/pages/owner/BranchesPage'));
 const BranchFormPage = page(() => import('@/pages/owner/BranchFormPage'));
+const BranchBarbersPage = page(() => import('@/pages/owner/BranchBarbersPage'));
 const BarbersPage = page(() => import('@/pages/owner/BarbersPage'));
 const BarberDetailPage = page(() => import('@/pages/owner/BarberDetailPage'));
 const ServicesPage = page(() => import('@/pages/owner/ServicesPage'));
 const ManagersPage = page(() => import('@/pages/owner/ManagersPage'));
 const SubscriptionPage = page(() => import('@/pages/owner/SubscriptionPage'));
+const CheckoutPage = page(() => import('@/pages/owner/CheckoutPage'));
 const SettingsPage = page(() => import('@/pages/owner/SettingsPage'));
 
 // Barbeiro
-const BarberAgendaPage = page(() => import('@/pages/barber/BarberAgendaPage'));
-const BarberStatsPage = page(() => import('@/pages/barber/BarberStatsPage'));
+const BarberDashboardPage = page(() => import('@/pages/barber/BarberDashboardPage'));
+const BarberAppointmentsPage = page(() => import('@/pages/barber/BarberAppointmentsPage'));
+const BarberEarningsPage = page(() => import('@/pages/barber/BarberEarningsPage'));
+const BarberClientsPage = page(() => import('@/pages/barber/BarberClientsPage'));
 const BarberTimeOffPage = page(() => import('@/pages/barber/BarberTimeOffPage'));
 
-// Admin da plataforma
-const AdminPage = page(() => import('@/pages/admin/AdminPage'));
+// Atendimento (recepção / front desk)
+const FrontDeskDashboardPage = page(() => import('@/pages/frontdesk/FrontDeskDashboardPage'));
+const FrontDeskAgendaPage = page(() => import('@/pages/frontdesk/FrontDeskAgendaPage'));
+const FrontDeskClientsPage = page(() => import('@/pages/frontdesk/FrontDeskClientsPage'));
+const FrontDeskClientFormPage = page(() => import('@/pages/frontdesk/FrontDeskClientFormPage'));
+const FrontDeskPaymentsPage = page(() => import('@/pages/frontdesk/FrontDeskPaymentsPage'));
 
-const OwnerHome = () => <OwnerDashboardPage />;
+// Admin da plataforma
+const AdminDashboardPage = page(() => import('@/pages/admin/AdminDashboardPage'));
+const AdminBarbershopsPage = page(() => import('@/pages/admin/AdminBarbershopsPage'));
+const AdminUsersPage = page(() => import('@/pages/admin/AdminUsersPage'));
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -85,7 +99,6 @@ const App = () => {
             <Route path="/b/:slug/:branchId" element={<BranchPage />} />
             <Route path="/termos" element={<LegalPage kind="terms" />} />
             <Route path="/privacidade" element={<LegalPage kind="privacy" />} />
-            <Route path="/verify-email" element={<VerifyEmailPage />} />
             <Route path="/confirmar-email" element={<ConfirmEmailChangePage />} />
             <Route path="/convite/:token" element={<AcceptInvitationPage />} />
 
@@ -101,6 +114,7 @@ const App = () => {
 
           <Route element={<AuthLayout />}>
             <Route path="/recuperar-senha" element={<PasswordRecoveryPage />} />
+            <Route path="/verify-email" element={<VerifyEmailPage />} />
             <Route element={<PublicOnly />}>
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
@@ -110,41 +124,60 @@ const App = () => {
 
           <Route element={<RequireAuth areas={['owner']} />}>
             <Route element={<WorkspaceLayout area="owner" />}>
-              <Route path="/dashboard" element={<OwnerHome />} />
+              <Route path="/dashboard" element={<OwnerDashboardPage />} />
               <Route path="/dashboard/agenda" element={<AgendaPage />} />
               <Route path="/dashboard/agendamentos/novo" element={<NewAppointmentPage />} />
               <Route path="/dashboard/clientes" element={<ClientsPage />} />
               <Route path="/dashboard/clientes/:clientId" element={<ClientDetailPage />} />
               <Route path="/dashboard/financeiro" element={<FinancialPage />} />
+              <Route path="/dashboard/rendimentos" element={<BranchEarningsPage />} />
               <Route path="/dashboard/filiais" element={<BranchesPage />} />
               <Route path="/dashboard/filiais/nova" element={<BranchFormPage />} />
               <Route path="/dashboard/filiais/:branchId" element={<BranchFormPage />} />
+              <Route path="/dashboard/filiais/:branchId/barbeiros" element={<BranchBarbersPage />} />
               <Route path="/dashboard/barbeiros" element={<BarbersPage />} />
               <Route path="/dashboard/barbeiros/:barberId" element={<BarberDetailPage />} />
               <Route path="/dashboard/servicos" element={<ServicesPage />} />
               <Route path="/dashboard/equipe" element={<ManagersPage />} />
               <Route path="/dashboard/assinatura" element={<SubscriptionPage />} />
+              <Route path="/dashboard/assinatura/checkout" element={<CheckoutPage />} />
               <Route path="/dashboard/configuracoes" element={<SettingsPage />} />
             </Route>
           </Route>
 
           <Route element={<RequireAuth areas={['barber']} />}>
             <Route element={<WorkspaceLayout area="barber" />}>
-              <Route path="/barbeiro" element={<BarberAgendaPage />} />
-              <Route path="/barbeiro/desempenho" element={<BarberStatsPage />} />
+              <Route path="/barbeiro" element={<BarberDashboardPage />} />
+              <Route path="/barbeiro/agendamentos" element={<BarberAppointmentsPage />} />
+              <Route path="/barbeiro/rendimentos" element={<BarberEarningsPage />} />
+              <Route path="/barbeiro/clientes" element={<BarberClientsPage />} />
               <Route path="/barbeiro/folgas" element={<BarberTimeOffPage />} />
             </Route>
           </Route>
 
+          <Route element={<RequireAuth areas={['frontdesk']} />}>
+            <Route element={<WorkspaceLayout area="frontdesk" />}>
+              <Route path="/atendimento" element={<FrontDeskDashboardPage />} />
+              <Route path="/atendimento/agenda" element={<FrontDeskAgendaPage />} />
+              <Route path="/atendimento/agendamentos/novo" element={<NewAppointmentPage />} />
+              <Route path="/atendimento/clientes" element={<FrontDeskClientsPage />} />
+              <Route path="/atendimento/clientes/novo" element={<FrontDeskClientFormPage />} />
+              <Route path="/atendimento/pagamentos" element={<FrontDeskPaymentsPage />} />
+            </Route>
+          </Route>
+
           <Route element={<RequireAuth areas={['admin']} />}>
-            <Route element={<PublicLayout />}>
-              <Route path="/admin" element={<AdminPage />} />
+            <Route element={<WorkspaceLayout area="admin" />}>
+              <Route path="/admin" element={<AdminDashboardPage />} />
+              <Route path="/admin/barbearias" element={<AdminBarbershopsPage />} />
+              <Route path="/admin/usuarios" element={<AdminUsersPage />} />
             </Route>
           </Route>
 
           {/* Endereços antigos */}
           <Route path="/user-home" element={<Navigate to="/cliente" replace />} />
           <Route path="/dashboard/barber" element={<Navigate to="/barbeiro" replace />} />
+          <Route path="/barbeiro/desempenho" element={<Navigate to="/barbeiro/rendimentos" replace />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
