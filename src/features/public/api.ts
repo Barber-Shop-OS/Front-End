@@ -5,6 +5,8 @@ import type { AppConfig, Paginated, PublicBarbershop, SearchBranch, Slot } from 
 export interface SearchParams {
   q?: string;
   city?: string;
+  /** Restringe a quem oferece um serviço com esse nome (BE-25). */
+  service?: string;
   lat?: number;
   lng?: number;
   page?: number;
