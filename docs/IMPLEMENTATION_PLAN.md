@@ -49,7 +49,19 @@ local (vite build + preview; API em docker com MySQL) — ver `docs/VALIDATION_R
 
 Pendências:
 1. Revisão de fidelidade visual tela a tela contra o Figma (a cota do Figma MCP do plano Starter acabou nesta sessão).
-2. Testes de componentes (Testing Library/MSW) das telas novas — hoje há testes das regras puras.
+2. Testes de componentes (Testing Library/MSW): base pronta (`src/test/render.tsx`, MSW global) com login 2FA,
+   cartão de 2FA e bloqueio de cliente; ampliar para as demais telas.
+
+### 21/11 (tarde)
+- SEC-27: login em duas etapas (app autenticador ou código de recuperação) e cartão em Conta › Segurança (QR code,
+  códigos de recuperação, desativar); admin sem 2FA é levado à ativação.
+- SEC-21: dono/gerente bloqueia/desbloqueia cliente (detalhe do cliente; selo "Bloqueado" na lista).
+- Correções: códigos de erro da API voltaram a chegar às telas (normalizeApiError) e campos dentro de modais não
+  perdem mais o foco a cada tecla; títulos das abas no painel/financeiro/rendimentos.
+- FE-40: CSP/HSTS gerados no build (`dist/_headers`), fallback SPA no wrangler; dependências sem vulnerabilidades
+  (zod 4, react-router 7.18). App mobile cancelado: o web é o único produto.
+- Validado no Chrome em produção local (API docker + PostgreSQL): ativar 2FA, login com código errado e com código
+  de recuperação, bloquear/desbloquear cliente, navegação sem violações de CSP.
 
 ## 5. Riscos e limitações conhecidas
 - OneDrive: arquivos podem virar placeholders ilegíveis; commits sempre com `git add` explícito.

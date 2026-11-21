@@ -421,7 +421,8 @@
 - **Descrição:** criar `public/_headers` (ou Worker) com CSP, HSTS, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, `frame-ancestors 'none'` conforme SEC-17; ajustar `wrangler.json` com `not_found_handling: "single-page-application"`; regra ESLint proibindo `dangerouslySetInnerHTML`; servir `/.well-known/assetlinks.json` para os App Links do Android (MOB-06).
 - **Impacto:** Alto. Reduz XSS/clickjacking e o risco do token em `localStorage` (SEC-15) até FE-37.
 
-### [ ] FE-41 — Páginas legais e consentimento `[SEC-20]`
+### [x] FE-41 — Páginas legais e consentimento `[SEC-20]`
+- **Feito:** `/termos` e `/privacidade` (rascunho LGPD para revisão jurídica, versão `VITE_TERMS_VERSION`), aceite obrigatório no cadastro de cliente e de dono (envia `terms_version`), e-mail do encarregado (`VITE_SUPPORT_EMAIL`) no rodapé.
 - **Prioridade:** antes do lançamento
 - **Depende de:** BE-40
 - **Descrição:** rotas `/termos` e `/privacidade` (texto fornecido pelo responsável/jurídico, com versão e data); checkbox obrigatório de aceite no cadastro de cliente e de dono (envia `terms_version`); link no rodapé e no app; e-mail do encarregado de dados.
