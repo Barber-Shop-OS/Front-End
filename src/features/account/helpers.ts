@@ -42,3 +42,6 @@ export const downloadJson = (data: unknown, filename: string): void => {
   link.remove();
   setTimeout(() => URL.revokeObjectURL(url), 0);
 };
+
+/** SEC-27: agrupa o segredo base32 em blocos de 4 para digitar no app autenticador sem QR code. */
+export const groupSecret = (secret: string): string => secret.replace(/(.{4})/g, '$1 ').trim();

@@ -2,6 +2,14 @@
 import { baseApi } from '@/services/baseApi';
 import type { Session, User } from '@/types/api';
 
+export interface TwoFactorStatus {
+  enabled: boolean;
+  enabled_at: string | null;
+  /** Obrigatório (admin). */
+  required: boolean;
+  recovery_codes_left: number;
+}
+
 export const accountApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     updateProfile: build.mutation<{ message: string; user: Partial<User> }, { name?: string; phone?: string | null }>({
@@ -32,6 +40,22 @@ export const accountApi = baseApi.injectEndpoints({
       query: () => '/me/export',
       keepUnusedDataFor: 0,
     }),
+    // SEC-27: verificação em duas etapas (TOTP).
+    twoFactorStatus: build.query<TwoFactorStatus, void>({
+      query: () => '/me/2fa',
+      providesTags: ['TwoFactor'],
+    }),
+    twoFactorSetup: build.mutation<{ secret: string; otpauth_url: string }, void>({
+      query: () => ({ url: '/me/2fa/setup', method: 'POST', body: {} }),
+    }),
+    twoFactorEnable: build.mutation<{ enabled: true; recovery_codes: string[] }, { code: string }>({
+      query: (body) => ({ url: '/me/2fa/enable', method: 'POST', body }),
+      invalidatesTags: ['TwoFactor', 'Me'],
+    }),
+    twoFactorDisable: build.mutation<{ enabled: false }, { password: string; code?: string; recovery_code?: string }>({
+      query: (body) => ({ url: '/me/2fa/disable', method: 'POST', body }),
+      invalidatesTags: ['TwoFactor', 'Me'],
+    }),
     deleteAccount: build.mutation<{ message: string }, { password?: string }>({
       query: (body) => ({ url: '/me/delete', method: 'POST', body }),
     }),
@@ -47,4 +71,8 @@ export const {
   useLogoutAllSessionsMutation,
   useLazyExportDataQuery,
   useDeleteAccountMutation,
+  useTwoFactorStatusQuery,
+  useTwoFactorSetupMutation,
+  useTwoFactorEnableMutation,
+  useTwoFactorDisableMutation,
 } = accountApi;

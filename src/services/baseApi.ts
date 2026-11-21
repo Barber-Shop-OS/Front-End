@@ -30,6 +30,7 @@ export const baseApi = createApi({
   baseQuery: axiosBaseQuery,
   tagTypes: [
     'Me',
+    'TwoFactor',
     'Barbershop',
     'Branch',
     'Barber',

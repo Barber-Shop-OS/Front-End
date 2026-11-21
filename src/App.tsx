@@ -9,7 +9,7 @@ import { useAppDispatch } from '@/hooks/redux';
 import AuthLayout from '@/layouts/AuthLayout';
 import PublicLayout from '@/layouts/PublicLayout';
 import WorkspaceLayout from '@/layouts/WorkspaceLayout';
-import { PublicOnly, RequireAuth } from '@/routes/guards';
+import { PublicOnly, RequireAdminTwoFactor, RequireAuth } from '@/routes/guards';
 import { ScrollToTop } from '@/routes/ScrollToTop';
 
 const RELOAD_KEY = 'barberos:chunk-reload';
@@ -198,9 +198,11 @@ const App = () => {
 
           <Route element={<RequireAuth areas={['admin']} />}>
             <Route element={<WorkspaceLayout area="admin" />}>
-              <Route path="/admin" element={<AdminDashboardPage />} />
-              <Route path="/admin/barbearias" element={<AdminBarbershopsPage />} />
-              <Route path="/admin/usuarios" element={<AdminUsersPage />} />
+              <Route element={<RequireAdminTwoFactor />}>
+                <Route path="/admin" element={<AdminDashboardPage />} />
+                <Route path="/admin/barbearias" element={<AdminBarbershopsPage />} />
+                <Route path="/admin/usuarios" element={<AdminUsersPage />} />
+              </Route>
             </Route>
           </Route>
 

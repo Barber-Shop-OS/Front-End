@@ -68,12 +68,30 @@ export const startSession = createAsyncThunk<Me, string, { rejectValue: ApiError
   }
 );
 
+/** SEC-27: a senha (ou o Google) só libera o desafio do 2º fator; a sessão abre em verifyTwoFactor. */
+export const TWO_FACTOR_REQUIRED = 'TWO_FACTOR_REQUIRED';
+type LoginResponse = { token?: string; two_factor_required?: boolean; challenge_token?: string };
+
+const twoFactorChallenge = (challengeToken: string): ApiError => ({
+  status: 401,
+  code: TWO_FACTOR_REQUIRED,
+  message: 'Digite o código do seu app autenticador.',
+  details: { challenge_token: challengeToken },
+});
+
+/** challenge_token do erro TWO_FACTOR_REQUIRED (ou null). */
+export const challengeTokenOf = (error: unknown): string | null => {
+  const { code, details } = (error ?? {}) as { code?: string; details?: { challenge_token?: unknown } };
+  return code === TWO_FACTOR_REQUIRED && typeof details?.challenge_token === 'string' ? details.challenge_token : null;
+};
+
 export const login = createAsyncThunk<Me, { email: string; password: string }, { rejectValue: ApiError }>(
   'auth/login',
   async (credentials, { dispatch, rejectWithValue }) => {
     try {
-      const { data } = await authHttp.post<{ token: string }>('/login', credentials);
-      return await dispatch(startSession(data.token)).unwrap();
+      const { data } = await authHttp.post<LoginResponse>('/login', credentials);
+      if (data.two_factor_required && data.challenge_token) return rejectWithValue(twoFactorChallenge(data.challenge_token));
+      return await dispatch(startSession(data.token as string)).unwrap();
     } catch (error) {
       return rejectWithValue(normalizeApiError(error));
     }
@@ -86,9 +104,24 @@ export const loginWithGoogle = createAsyncThunk<
   { rejectValue: ApiError }
 >('auth/google', async (payload, { dispatch, rejectWithValue }) => {
   try {
-    const { data } = await authHttp.post<{ token: string; created: boolean }>('/google', { ...payload, terms_version: TERMS_VERSION });
-    const me = await dispatch(startSession(data.token)).unwrap();
+    const { data } = await authHttp.post<LoginResponse & { created: boolean }>('/google', { ...payload, terms_version: TERMS_VERSION });
+    if (data.two_factor_required && data.challenge_token) return rejectWithValue(twoFactorChallenge(data.challenge_token));
+    const me = await dispatch(startSession(data.token as string)).unwrap();
     return { me, created: data.created };
+  } catch (error) {
+    return rejectWithValue(normalizeApiError(error));
+  }
+});
+
+/** SEC-27: 2º fator do login — código de 6 dígitos do app ou um código de recuperação. */
+export const verifyTwoFactor = createAsyncThunk<
+  Me,
+  { challenge_token: string; code?: string; recovery_code?: string },
+  { rejectValue: ApiError }
+>('auth/2fa', async (payload, { dispatch, rejectWithValue }) => {
+  try {
+    const { data } = await authHttp.post<{ token: string }>('/2fa/verify', payload);
+    return await dispatch(startSession(data.token)).unwrap();
   } catch (error) {
     return rejectWithValue(normalizeApiError(error));
   }

@@ -64,6 +64,9 @@ export interface Me extends User {
   barber_profiles: MeBarberProfile[];
   billing_banner: BillingBanner | null;
   billing_banners: BillingBanner[];
+  /** SEC-27: 2FA ativo; obrigatório para admin. */
+  two_factor_enabled?: boolean;
+  two_factor_required?: boolean;
 }
 
 export interface Address {
@@ -227,6 +230,10 @@ export interface Client {
   no_shows: number | null;
   last_visit: string | null;
   total_spent: string | null;
+  /** SEC-21: bloqueado pela barbearia (não agenda online; a equipe ainda agenda no balcão). */
+  blocked?: boolean;
+  blocked_at?: string | null;
+  blocked_reason?: string | null;
 }
 
 export interface ClientHistoryItem {

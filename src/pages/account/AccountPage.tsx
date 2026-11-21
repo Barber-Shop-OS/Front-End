@@ -18,6 +18,7 @@ import {
   useUpdateProfileMutation,
 } from '@/features/account/api';
 import { EmailVerificationBanner } from '@/features/account/EmailVerificationBanner';
+import { TwoFactorCard } from '@/features/account/TwoFactorCard';
 import { describeUserAgent, downloadJson, isMobileUserAgent } from '@/features/account/helpers';
 import {
   DELETE_CONFIRMATION_WORD,
@@ -453,7 +454,7 @@ const PrivacySection = () => {
 const AccountPage = () => {
   usePageTitle('Minha conta');
   const { user } = useAuth();
-  const [section, setSection] = useState<Section>(() => (window.location.hash === '#notificacoes' ? 'notifications' : 'profile'));
+  const [section, setSection] = useState<Section>(() => (window.location.hash === '#notificacoes' ? 'notifications' : window.location.hash === '#seguranca' ? 'security' : 'profile'));
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:py-12">
@@ -496,6 +497,7 @@ const AccountPage = () => {
           {section === 'security' ? (
             <>
               <PasswordCard />
+              <TwoFactorCard />
               <EmailCard />
               <SessionsCard />
             </>

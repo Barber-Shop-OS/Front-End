@@ -27,6 +27,12 @@ const MESSAGES: Record<string, string> = {
   UPLOADS_UNAVAILABLE: 'Envio de imagens indisponível no momento.',
   INVALID_FILE: 'Arquivo inválido. Use JPEG, PNG ou WebP de até 2 MB.',
   ACTIVE_SUBSCRIPTION: 'Cancele a assinatura da barbearia antes de excluir a conta.',
+  TWO_FACTOR_REQUIRED: 'Sua conta usa verificação em duas etapas. Entre pela tela de login para digitar o código.',
+  TWO_FACTOR_INVALID: 'Código inválido ou expirado. Confira o app autenticador e tente de novo.',
+  TWO_FACTOR_SETUP_REQUIRED: 'Ative a verificação em duas etapas para acessar a administração.',
+  TWO_FACTOR_REQUIRED_FOR_ROLE: 'A verificação em duas etapas é obrigatória para administradores.',
+  CONTACT_REQUIRED: 'Confirme seu e-mail ou cadastre um celular para agendar.',
+  CLIENT_BLOCKED: 'Não é possível agendar online nesta barbearia. Fale com a barbearia.',
   GOOGLE_TOKEN_INVALID: 'Não foi possível entrar com o Google. Tente novamente.',
 };
 
