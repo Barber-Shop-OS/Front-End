@@ -47,12 +47,11 @@ export const weekdayOf = (date: string): number => {
 export const WEEKDAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 export const WEEKDAYS_SHORT = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
-/** "segunda-feira, 10 de novembro" a partir de YYYY-MM-DD. */
+/** "Segunda-feira, 10 de novembro" a partir de YYYY-MM-DD (só a primeira letra maiúscula). */
 export const formatLocalDateLong = (date: string): string => {
   const [y, m, d] = date.split('-').map(Number);
-  return new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC', weekday: 'long', day: 'numeric', month: 'long' }).format(
-    new Date(Date.UTC(y, m - 1, d))
-  );
+  const text = new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(Date.UTC(y, m - 1, d)));
+  return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
 /** "10/11" a partir de YYYY-MM-DD. */

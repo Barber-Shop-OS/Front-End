@@ -12,8 +12,38 @@ import WorkspaceLayout from '@/layouts/WorkspaceLayout';
 import { PublicOnly, RequireAuth } from '@/routes/guards';
 import { ScrollToTop } from '@/routes/ScrollToTop';
 
+const RELOAD_KEY = 'barberos:chunk-reload';
+
+/**
+ * Página sob demanda. Depois de um deploy, abas abertas pedem chunks que não existem mais: recarrega a
+ * página uma vez (marcando na sessão para não entrar em laço) antes de mostrar o erro.
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const page = <P extends Record<string, any>,>(loader: () => Promise<{ default: React.ComponentType<P> }>) => lazy(loader);
+const page = <P extends Record<string, any>,>(loader: () => Promise<{ default: React.ComponentType<P> }>) =>
+  lazy(async () => {
+    try {
+      const module = await loader();
+      try {
+        window.sessionStorage.removeItem(RELOAD_KEY);
+      } catch {
+        // sem storage
+      }
+      return module;
+    } catch (error) {
+      let reloaded = false;
+      try {
+        reloaded = window.sessionStorage.getItem(RELOAD_KEY) === '1';
+        if (!reloaded) window.sessionStorage.setItem(RELOAD_KEY, '1');
+      } catch {
+        reloaded = true;
+      }
+      if (!reloaded) {
+        window.location.reload();
+        return new Promise<never>(() => {});
+      }
+      throw error;
+    }
+  });
 
 // Públicas
 const LandingPage = page(() => import('@/pages/public/LandingPage'));

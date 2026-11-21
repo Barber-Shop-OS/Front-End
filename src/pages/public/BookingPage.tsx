@@ -194,7 +194,7 @@ const TimeStep = ({ shop, selection, update }: { shop: PublicBarbershop; selecti
       </Card>
 
       <div>
-        <h3 className="mb-4 text-lg font-bold capitalize text-ink">{formatLocalDateLong(date)}</h3>
+        <h3 className="mb-4 text-lg font-bold text-ink">{formatLocalDateLong(date)}</h3>
         {isFetching ? (
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (

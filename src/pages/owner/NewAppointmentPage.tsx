@@ -218,8 +218,8 @@ const Content = ({ ctx, basePath }: { ctx: ActiveContext; basePath: string }) =>
         description={`Agendamento de balcão — ${branch.name}`}
       />
       {!branch.active ? <Alert tone="warning" className="mb-6">Esta filial está inativa e não aceita novos agendamentos.</Alert> : null}
-      <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
-        <div className="space-y-6">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="min-w-0 space-y-6">
           <Step n={1} title="Cliente" done={Boolean(client)}>
             <ClientPicker barbershopId={barbershopId} value={client} onChange={setClient} />
           </Step>

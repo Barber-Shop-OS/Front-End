@@ -53,7 +53,7 @@ export const AgendaScreen = ({ ctx, newAppointmentPath, title }: { ctx: ActiveCo
         }
       />
 
-      <div className="mb-6 flex flex-col gap-3 rounded-xl bg-white p-3 shadow-card lg:flex-row lg:items-center">
+      <div className="mb-6 flex flex-col gap-3 rounded-xl bg-white p-3 shadow-card xl:flex-row xl:flex-wrap xl:items-center">
         <div className="flex items-center gap-2">
           <button type="button" className="rounded-lg p-2 text-ink-variant hover:bg-surface-low" aria-label="Anterior" onClick={() => setDate(addDays(date, -step))}>
             <ChevronLeft className="h-5 w-5" />
@@ -69,12 +69,12 @@ export const AgendaScreen = ({ ctx, newAppointmentPath, title }: { ctx: ActiveCo
           </label>
           <input id="agenda-date" type="date" value={date} onChange={(e) => e.target.value && setDate(e.target.value)} className="h-10 rounded-lg bg-surface-low px-3 text-sm" />
         </div>
-        <p className="flex-1 text-base font-bold capitalize text-ink">
+        <p className="min-w-[200px] flex-1 text-base font-bold text-ink">
           {label}
           {isFetching && !isLoading ? <span className="ml-2 text-xs font-normal text-ink-subtle">atualizando…</span> : null}
         </p>
         <div className="flex flex-wrap items-center gap-2">
-          <Select aria-label="Barbeiro" className="h-10" containerClassName="w-44" value={barberId} onChange={(e) => setBarberId(e.target.value ? Number(e.target.value) : '')}>
+          <Select aria-label="Barbeiro" className="h-10" containerClassName="w-48" value={barberId} onChange={(e) => setBarberId(e.target.value ? Number(e.target.value) : '')}>
             <option value="">Todos os barbeiros</option>
             {barbers.map((b) => (
               <option key={b.id} value={b.id}>
@@ -82,7 +82,7 @@ export const AgendaScreen = ({ ctx, newAppointmentPath, title }: { ctx: ActiveCo
               </option>
             ))}
           </Select>
-          <Select aria-label="Status" className="h-10" containerClassName="w-40" value={status} onChange={(e) => setStatus(e.target.value as AppointmentStatus | '')}>
+          <Select aria-label="Status" className="h-10" containerClassName="w-44" value={status} onChange={(e) => setStatus(e.target.value as AppointmentStatus | '')}>
             <option value="">Todos os status</option>
             <option value="confirmado">Confirmados</option>
             <option value="concluido">Concluídos</option>

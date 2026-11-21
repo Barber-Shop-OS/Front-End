@@ -46,9 +46,21 @@ export interface MeBarberProfile {
   branch: { id: number; name: string; barbershop_id: number } | null;
 }
 
+/** BE-49: filial onde a pessoa é recepcionista (GET /me → front_desk[]). */
+export interface MeFrontDesk {
+  membership_id: number;
+  role: 'receptionist';
+  barbershop_id: number;
+  branch_id: number;
+  barbershop: { id: number; name: string; slug: string; status: string; logo_url: string | null };
+  branch: { id: number; name: string; timezone: string };
+}
+
 export interface Me extends User {
   roles: string[];
+  /** Dono/gerente vêm da API; o front acrescenta as barbearias de atendimento (membership 'receptionist'). */
   barbershops: MeBarbershop[];
+  front_desk?: MeFrontDesk[];
   barber_profiles: MeBarberProfile[];
   billing_banner: BillingBanner | null;
   billing_banners: BillingBanner[];

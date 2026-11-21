@@ -5,7 +5,7 @@ import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/tool
 import http, { authHttp, normalizeApiError, refreshAccessToken, setAccessToken, type ApiError } from '@/services/http';
 import { baseApi } from '@/services/baseApi';
 import { TERMS_VERSION } from '@/config/env';
-import type { Me } from '@/types/api';
+import type { Me, MeBarbershop } from '@/types/api';
 
 export type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'unauthenticated';
 
@@ -16,7 +16,31 @@ export interface AuthState {
 
 const initialState: AuthState = { status: 'idle', user: null };
 
-const fetchMe = async (): Promise<Me> => (await http.get<Me>('/me')).data;
+/**
+ * A API lista dono/gerente em `barbershops` e a recepção em `front_desk` (uma linha por filial). O app trata
+ * tudo como barbearias com `membership`; aqui as filiais de atendimento viram entradas 'receptionist'.
+ */
+export const normalizeMe = (me: Me): Me => {
+  const extra = new Map<number, MeBarbershop>();
+  for (const desk of me.front_desk ?? []) {
+    if (me.barbershops.some((shop) => shop.id === desk.barbershop_id && shop.membership === 'receptionist')) continue;
+    const current = extra.get(desk.barbershop_id);
+    if (current) current.branch_ids = [...(current.branch_ids ?? []), desk.branch_id];
+    else
+      extra.set(desk.barbershop_id, {
+        id: desk.barbershop_id,
+        name: desk.barbershop.name,
+        slug: desk.barbershop.slug,
+        status: desk.barbershop.status,
+        logo_url: desk.barbershop.logo_url,
+        membership: 'receptionist',
+        branch_ids: [desk.branch_id],
+      });
+  }
+  return extra.size ? { ...me, barbershops: [...(me.barbershops ?? []), ...extra.values()] } : me;
+};
+
+const fetchMe = async (): Promise<Me> => normalizeMe((await http.get<Me>('/me')).data);
 
 /** Carregamento do app: tenta renovar a sessão pelo cookie de refresh. */
 export const bootstrapSession = createAsyncThunk<Me | null>('auth/bootstrap', async () => {

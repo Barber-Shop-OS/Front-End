@@ -18,7 +18,7 @@ import { featureLabel, limitLabel, type DaySchedule } from './utils';
 // ---------------------------------------------------------------------------------------------
 
 const timeInput =
-  'h-10 w-[104px] rounded-lg border border-transparent bg-surface-low px-2 text-sm text-ink focus:border-primary-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-100 disabled:opacity-50';
+  'h-10 w-[128px] rounded-lg border border-transparent bg-surface-low px-2 text-sm text-ink focus:border-primary-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-100 disabled:opacity-50';
 
 export const WeekScheduleEditor = ({
   value,

@@ -57,7 +57,7 @@ const BarberDashboardPage = () => {
     <div>
       <PageHeader
         title={`${greeting(tz)}, ${firstName}!`}
-        description={<span className="capitalize">{formatLocalDateLong(today)}</span>}
+        description={formatLocalDateLong(today)}
         action={<BarberProfileSelect ctx={ctx} />}
       />
 

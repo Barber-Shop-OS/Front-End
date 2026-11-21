@@ -146,7 +146,7 @@ const ClosuresCard = ({ branchId, timezone }: { branchId: number; timezone: stri
           {upcoming.map((closure) => (
             <li key={closure.id} className="flex items-center justify-between gap-3 py-3">
               <div>
-                <p className="text-sm font-semibold capitalize text-ink">{formatLocalDateLong(closure.date)}</p>
+                <p className="text-sm font-semibold text-ink">{formatLocalDateLong(closure.date)}</p>
                 <p className="text-xs text-ink-variant">
                   {closure.all_day ? 'Dia inteiro' : `${closure.start_time?.slice(0, 5)} às ${closure.end_time?.slice(0, 5)}`}
                   {closure.reason ? ` · ${closure.reason}` : ''}

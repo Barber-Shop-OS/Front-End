@@ -38,7 +38,7 @@ const badgeTones: Record<BadgeTone, string> = {
 };
 
 export const Badge = ({ tone = 'gray', children, className }: { tone?: BadgeTone; children: ReactNode; className?: string }) => (
-  <span className={cn('inline-flex items-center rounded-xl px-2 py-1 text-xs font-bold leading-4', badgeTones[tone], className)}>{children}</span>
+  <span className={cn('inline-flex items-center whitespace-nowrap rounded-xl px-2 py-1 text-xs font-bold leading-4', badgeTones[tone], className)}>{children}</span>
 );
 
 export const STATUS_LABEL: Record<AppointmentStatus, string> = {

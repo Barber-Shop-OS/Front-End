@@ -33,7 +33,7 @@ const Content = ({ ctx }: { ctx: ActiveContext }) => {
 
   return (
     <div>
-      <PageHeader title="Atendimento" description={data ? <span className="capitalize">{`${data.branch.name} · ${formatLocalDateLong(data.date)}`}</span> : ctx.branch?.name} />
+      <PageHeader title="Atendimento" description={data ? `${data.branch.name} · ${formatLocalDateLong(data.date)}` : ctx.branch?.name} />
       {error ? <ErrorState error={error} onRetry={refetch} className="mb-6" /> : null}
       <div className="mb-8 grid gap-4 sm:grid-cols-3">
         <Stat label="Agendamentos hoje" value={data ? data.total_today : <Skeleton className="h-9 w-12" />} icon={<CalendarCheck className="h-5 w-5" aria-hidden="true" />} hint={data?.cancelled ? `${data.cancelled} cancelado(s)` : undefined} />
