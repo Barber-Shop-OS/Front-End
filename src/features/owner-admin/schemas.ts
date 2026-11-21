@@ -61,7 +61,7 @@ export const serviceSchema = z.object({
     .refine((value) => !Number.isNaN(parsePrice(value)), 'Preço inválido (ex.: 45,00)')
     .refine((value) => parsePrice(value) <= 100000, 'Preço acima do permitido'),
   duration: z.coerce
-    .number({ invalid_type_error: 'Informe a duração' })
+    .number({ error: 'Informe a duração' })
     .int('Use minutos inteiros')
     .min(5, 'Mínimo de 5 minutos')
     .max(480, 'Máximo de 8 horas')

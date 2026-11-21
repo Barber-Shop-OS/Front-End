@@ -1,0 +1,25 @@
+import { describe, expect, it } from 'vitest';
+
+import { contentSecurityPolicy, headersFile } from './securityHeaders';
+
+describe('cabeçalhos de segurança (SEC-17)', () => {
+  it('CSP libera só a origem da API, o login do Google e o ViaCEP', () => {
+    const csp = contentSecurityPolicy('https://api.barberos.com.br/');
+    expect(csp).toContain("connect-src 'self' https://api.barberos.com.br https://viacep.com.br https://accounts.google.com/gsi/");
+    expect(csp).toContain("frame-ancestors 'none'");
+    expect(csp).toContain("script-src 'self' https://accounts.google.com/gsi/client");
+    expect(csp).not.toContain("'unsafe-eval'");
+  });
+
+  it('URL inválida não entra na CSP', () => {
+    expect(contentSecurityPolicy('não é url')).toContain("connect-src 'self' https://viacep.com.br");
+  });
+
+  it('arquivo _headers tem HSTS, nosniff e cache imutável dos assets', () => {
+    const file = headersFile('https://api.barberos.com.br');
+    expect(file).toMatch(/^\/\*\n {2}Content-Security-Policy: /);
+    expect(file).toContain('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+    expect(file).toContain('X-Content-Type-Options: nosniff');
+    expect(file).toContain('/assets/*\n  Cache-Control: public, max-age=31536000, immutable');
+  });
+});

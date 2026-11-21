@@ -1,13 +1,28 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
 
-export default defineConfig({
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src')
-    }
+import { contentSecurityPolicy, headersFile } from './build/securityHeaders';
+
+/** SEC-17 / FE-40: gera `dist/_headers` (CSP com a origem da API do ambiente). */
+const securityHeaders = (apiBaseUrl: string | undefined): Plugin => ({
+  name: 'barberos-security-headers',
+  apply: 'build',
+  generateBundle() {
+    this.emitFile({ type: 'asset', fileName: '_headers', source: headersFile(apiBaseUrl) });
   },
-  // Prepared for React Compiler: enable Babel plugin when upgrading stack to compatible React release.
-  plugins: [react()]
+});
+
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), 'VITE_');
+  return {
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
+      },
+    },
+    plugins: [react(), securityHeaders(env.VITE_API_BASE_URL)],
+    // `vite preview` (produção local) aplica a mesma CSP do Cloudflare para pegar violações antes do deploy.
+    preview: { headers: { 'Content-Security-Policy': contentSecurityPolicy(env.VITE_API_BASE_URL) } },
+  };
 });

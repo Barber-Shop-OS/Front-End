@@ -61,6 +61,6 @@ export const onboardingSchema = z.object({
   complement: z.string().trim().max(120).optional(),
   neighborhood: z.string().trim().max(100).optional(),
   city: z.string().trim().min(2, 'Informe a cidade').max(100),
-  state: z.enum(UFS, { errorMap: () => ({ message: 'Selecione o estado' }) }),
+  state: z.enum(UFS, { error: 'Selecione o estado' }),
 });
 export type OnboardingValues = z.infer<typeof onboardingSchema>;

@@ -1,7 +1,7 @@
 // Validação dos formulários de entrada (zod). Mesmas regras da API: senha 8–72, e-mail válido, termos aceitos.
 import { z } from 'zod';
 
-const terms = z.literal(true, { errorMap: () => ({ message: 'Aceite os termos para continuar' }) });
+const terms = z.literal(true, { error: 'Aceite os termos para continuar' });
 const password = z.string().min(8, 'Mínimo de 8 caracteres').max(72, 'Máximo de 72 caracteres');
 const email = z.string().trim().email('Informe um e-mail válido');
 

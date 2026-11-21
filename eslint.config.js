@@ -19,6 +19,8 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       'jsx-a11y/no-autofocus': 'off',
+      // SEC-17: nada de HTML cru vindo da API (React escapa por padrão; manter assim).
+      'no-restricted-syntax': ['error', { selector: "JSXAttribute[name.name='dangerouslySetInnerHTML']", message: 'Proibido (SEC-17): renderize texto, não HTML.' }],
     },
   },
   {

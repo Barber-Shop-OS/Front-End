@@ -20,7 +20,8 @@
 - **2026-10-23 — Confirmação automática:** o agendamento nasce `confirmado`. Não existe tela de "aprovar agendamento".
 - **2026-10-23 — O cliente cancela/reagenda até 24 h antes.** Depois disso, a UI esconde/desabilita as ações e mostra "fale com a barbearia" (com link de WhatsApp/telefone).
 - **2026-11-07 — Planos definidos: R$ 99, R$ 199 e R$ 399/mês; gateway AbacatePay (API v2).** Limites/nomes recomendados em `Back-End/docs/BACKLOG.md` → BE-31 (Essencial / Profissional / Rede). FE-29 desbloqueado. Preços **sempre** vêm de `GET /api/plans` — nunca fixos no código.
-- **2026-11-07 — App mobile terá backlog próprio** (`Mobile/docs/BACKLOG.md`, Android primeiro). O web continua sendo o canal principal de lançamento e o único lugar onde o dono assina plano e faz configuração pesada.
+- **2026-11-21 — App mobile cancelado.** O produto é só web (mobile-first); `MOB-xx` e dependências de app (App Links, push do Expo) deixam de valer.
+- ~~**2026-11-07 — App mobile terá backlog próprio**~~ (`Mobile/docs/BACKLOG.md`, Android primeiro). O web continua sendo o canal principal de lançamento e o único lugar onde o dono assina plano e faz configuração pesada.
 
 ### Estado atual confirmado (lido do código em 2026-10-23)
 - Stack: React 18 + Vite 7 + TypeScript + Tailwind 3 + Redux Toolkit + Redux-Saga + redux-persist + Axios + React Router 6. Ícones: `lucide-react` **e** `react-icons` (duas libs). Deploy: Cloudflare (`wrangler.json`, assets em `dist`).
@@ -413,7 +414,8 @@
 - **Descrição:** Rotas `/admin/*` para role `admin`: listar barbearias, assinaturas, usuários; suspender barbearia; métricas da plataforma.
 - **Impacto:** Baixo agora; necessário para operar o SaaS com muitos clientes.
 
-### [ ] FE-40 — Cabeçalhos de segurança, CSP e fallback SPA no Cloudflare `[SEC-17]`
+### [x] FE-40 — Cabeçalhos de segurança, CSP e fallback SPA no Cloudflare `[SEC-17]`
+- **Feito (2026-11-21):** `dist/_headers` gerado no build (`build/securityHeaders.ts`, CSP com a origem de `VITE_API_BASE_URL`, Google login, ViaCEP, Google Fonts; HSTS, nosniff, `X-Frame-Options`, Referrer/Permissions-Policy, cache imutável de `/assets/*`); `vite preview` aplica a mesma CSP (validado no Chrome sem violações); `wrangler.json` com `not_found_handling: "single-page-application"`; ESLint proíbe `dangerouslySetInnerHTML`. `assetlinks.json` descartado (sem app mobile). **No deploy:** conferir em securityheaders.com.
 - **Prioridade:** antes do lançamento
 - **Depende de:** FE-03
 - **Descrição:** criar `public/_headers` (ou Worker) com CSP, HSTS, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, `frame-ancestors 'none'` conforme SEC-17; ajustar `wrangler.json` com `not_found_handling: "single-page-application"`; regra ESLint proibindo `dangerouslySetInnerHTML`; servir `/.well-known/assetlinks.json` para os App Links do Android (MOB-06).
