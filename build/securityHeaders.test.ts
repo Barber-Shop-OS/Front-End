@@ -15,6 +15,14 @@ describe('cabeçalhos de segurança (SEC-17)', () => {
     expect(contentSecurityPolicy('https://api.x.com', 'http://localhost:9090/barberos')).toContain("img-src 'self' data: blob: https: http://localhost:9090;");
   });
 
+  it('GA4 só entra na CSP quando configurado (FE-42)', () => {
+    expect(contentSecurityPolicy('https://api.x.com')).not.toContain('googletagmanager');
+    const csp = contentSecurityPolicy('https://api.x.com', undefined, true);
+    expect(csp).toContain("script-src 'self' https://accounts.google.com/gsi/client https://*.googletagmanager.com;");
+    expect(csp).toContain('https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com');
+    expect(headersFile('https://api.x.com', undefined, true)).toContain('googletagmanager');
+  });
+
   it('URL inválida não entra na CSP', () => {
     expect(contentSecurityPolicy('não é url')).toContain("connect-src 'self' https://viacep.com.br");
   });

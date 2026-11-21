@@ -5,6 +5,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { FullScreenLoader } from '@/components/ui';
 import { bootstrapSession } from '@/features/auth/authSlice';
+import { CookieConsentBanner } from '@/features/consent/CookieConsentBanner';
 import { useAppDispatch } from '@/hooks/redux';
 import AuthLayout from '@/layouts/AuthLayout';
 import PublicLayout from '@/layouts/PublicLayout';
@@ -118,6 +119,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <CookieConsentBanner />
       <Suspense fallback={<FullScreenLoader />}>
         <Routes>
           <Route element={<PublicLayout />}>

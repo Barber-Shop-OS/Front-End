@@ -27,3 +27,9 @@ export const TERMS_VERSION: string = (import.meta.env.VITE_TERMS_VERSION as stri
 export const APP_URL: string = normalizeBaseUrl(
   (import.meta.env.VITE_APP_URL as string | undefined) || (typeof window !== 'undefined' ? window.location.origin : '')
 );
+
+/** FE-42: ID de medição do Google Analytics 4 (G-XXXXXXX). Vazio = sem GA4 e sem banner de cookies. */
+export const GA_MEASUREMENT_ID: string | undefined = (import.meta.env.VITE_GA_MEASUREMENT_ID as string | undefined)?.trim() || undefined;
+
+/** FE-42: versão da política de cookies; mudar pede o consentimento de novo a todos. */
+export const COOKIE_POLICY_VERSION: string = (import.meta.env.VITE_COOKIE_POLICY_VERSION as string | undefined) || '2026-11';

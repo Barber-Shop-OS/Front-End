@@ -428,6 +428,9 @@
 - **Descrição:** rotas `/termos` e `/privacidade` (texto fornecido pelo responsável/jurídico, com versão e data); checkbox obrigatório de aceite no cadastro de cliente e de dono (envia `terms_version`); link no rodapé e no app; e-mail do encarregado de dados.
 - **Impacto:** Alto. Exigência legal (LGPD) e da Play Store para o app.
 
+### [x] FE-42 — Google Analytics 4 com banner de cookies (LGPD) `[SEC-20]`
+- **Feito (2026-11-21):** GA4 (`VITE_GA_MEASUREMENT_ID`; vazio = sem GA e sem banner) carregado **só após consentimento**, com Consent Mode v2 (publicidade sempre negada, sem Google Signals, cookies de 13 meses). Banner com Recusar/Aceitar do mesmo peso + Personalizar; painel de preferências reaberto por "Cookies" no rodapé, na política (`/privacidade#cookies`) e em Minha conta; revogar apaga `_ga*` e liga `ga-disable`. Page views da SPA com caminho sanitizado (sem query, `/convite/:token`, IDs → `:id`, sem título nas áreas logadas). Escolha registrada em `POST /consents/cookies` (BE-58), reenvio se falhar; nova pergunta quando `VITE_COOKIE_POLICY_VERSION` muda ou após 12 meses. CSP libera googletagmanager/google-analytics só com GA configurado. Política de privacidade: tabela de cookies, Google como operador, transferência internacional (art. 33), aviso de minuta removido (LGPD aprovada). Validado no Chrome (dev + preview com CSP de produção). Testes: `features/consent/__tests__/CookieConsent.test.tsx`, `build/securityHeaders.test.ts`.
+
 ### [ ] FE-39 — Documentação do front sincronizada
 - **Prioridade:** 39º
 - **Depende de:** contínuo

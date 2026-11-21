@@ -8,6 +8,7 @@ import { CalendarDays, LayoutDashboard, LogOut, Menu, Search, Settings, User, X 
 import { Logo } from '@/components/Logo';
 import { Avatar, buttonClass } from '@/components/ui';
 import { homePathFor, useAuth, useLogout } from '@/features/auth/hooks';
+import { openCookiePreferences } from '@/features/consent/consentStore';
 import { NotificationBell } from '@/features/notifications/NotificationBell';
 import { cn } from '@/utils/cn';
 
@@ -179,6 +180,9 @@ export const PublicLayout = () => {
               {item.label}
             </Link>
           ))}
+          <button type="button" onClick={openCookiePreferences} className="text-xs uppercase tracking-label text-slate-400 hover:text-ink-variant">
+            Cookies
+          </button>
           <a href={`mailto:${import.meta.env.VITE_SUPPORT_EMAIL || 'suporte@barberos.app'}`} className="text-xs uppercase tracking-label text-slate-400 hover:text-ink-variant">
             Suporte
           </a>

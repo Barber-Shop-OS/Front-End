@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
-import { Bell, Download, KeyRound, LogOut, Mail, Monitor, ShieldCheck, Smartphone, Trash2, UserRound } from 'lucide-react';
+import { Bell, Cookie, Download, KeyRound, LogOut, Mail, Monitor, ShieldCheck, Smartphone, Trash2, UserRound } from 'lucide-react';
 
 import { Alert, Avatar, Badge, Button, Card, CardTitle, ConfirmDialog, EmptyState, ErrorState, Input, ListSkeleton, Modal, PageHeader, Pagination, Tabs, useToast } from '@/components/ui';
 import {
@@ -19,6 +19,7 @@ import {
 } from '@/features/account/api';
 import { EmailVerificationBanner } from '@/features/account/EmailVerificationBanner';
 import { TwoFactorCard } from '@/features/account/TwoFactorCard';
+import { openCookiePreferences } from '@/features/consent/consentStore';
 import { describeUserAgent, downloadJson, isMobileUserAgent } from '@/features/account/helpers';
 import {
   DELETE_CONFIRMATION_WORD,
@@ -381,6 +382,17 @@ const PrivacySection = () => {
 
   return (
     <div className="space-y-6">
+      <Card>
+        <CardTitle>
+          <span className="inline-flex items-center gap-2">
+            <Cookie className="h-5 w-5 text-primary-600" aria-hidden="true" /> Cookies
+          </span>
+        </CardTitle>
+        <p className="mb-4 text-sm text-ink-variant">Veja ou mude quais cookies opcionais (estatísticas do Google Analytics) podem ser usados neste navegador.</p>
+        <Button variant="secondary" onClick={openCookiePreferences}>
+          Preferências de cookies
+        </Button>
+      </Card>
       <Card>
         <CardTitle>
           <span className="inline-flex items-center gap-2">

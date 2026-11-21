@@ -1,10 +1,12 @@
-// /termos e /privacidade — rascunho de Termos de Uso e Política de Privacidade (LGPD). Sem frame no Figma:
-// tipografia do design system (título de página 36/40, seções 18/28, corpo 14–16). MINUTA sujeita a revisão jurídica.
+// /termos e /privacidade — Termos de Uso e Política de Privacidade (LGPD). Sem frame no Figma:
+// tipografia do design system (título de página 36/40, seções 18/28, corpo 14–16).
+// FE-42: seção de cookies com GA4 (consentimento, Google como operador, transferência internacional).
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { AlertTriangle } from 'lucide-react';
 
-import { TERMS_VERSION } from '@/config/env';
+import { Button } from '@/components/ui';
+import { COOKIE_POLICY_VERSION, TERMS_VERSION } from '@/config/env';
+import { openCookiePreferences } from '@/features/consent/consentStore';
 import { usePageTitle } from '@/hooks/usePageTitle';
 
 const SUPPORT_EMAIL: string = (import.meta.env.VITE_SUPPORT_EMAIL as string | undefined) || 'suporte@barberos.app';
@@ -12,6 +14,8 @@ const SUPPORT_EMAIL: string = (import.meta.env.VITE_SUPPORT_EMAIL as string | un
 interface LegalSection {
   title: string;
   body: ReactNode;
+  /** Âncora (ex.: /privacidade#cookies). */
+  id?: string;
 }
 
 const Mail = () => (
@@ -98,6 +102,7 @@ const PRIVACY: LegalSection[] = [
         <li><strong>Agendamentos:</strong> barbearia, filial, serviço, barbeiro, data e horário, observações e histórico de atendimentos.</li>
         <li><strong>Barbearias:</strong> dados da empresa, endereço das filiais, equipe, serviços, preços e registros financeiros.</li>
         <li><strong>Uso técnico:</strong> endereço IP, navegador/dispositivo e sessões ativas, para segurança e prevenção de fraudes.</li>
+        <li><strong>Estatísticas de navegação (só com o seu consentimento):</strong> páginas visitadas, tempo de visita, origem do acesso, tipo de dispositivo e região aproximada, coletados pelo Google Analytics.</li>
         <li><strong>Localização:</strong> apenas quando você usa “Perto de mim”, e somente para ordenar os resultados; não armazenamos sua posição.</li>
       </ul>
     ),
@@ -110,6 +115,7 @@ const PRIVACY: LegalSection[] = [
         <li>Enviar confirmações, lembretes e avisos sobre seus agendamentos e sua conta.</li>
         <li>Garantir a segurança, prevenir fraudes e cumprir obrigações legais.</li>
         <li>Melhorar a plataforma com dados agregados (legítimo interesse).</li>
+        <li>Medir o uso do site com o Google Analytics, somente se você aceitar os cookies de estatísticas (consentimento).</li>
       </ul>
     ),
   },
@@ -118,19 +124,81 @@ const PRIVACY: LegalSection[] = [
     body: (
       <p>
         Seus dados de agendamento são compartilhados com a barbearia escolhida. Também utilizamos fornecedores para hospedagem, envio de
-        e-mails e processamento de pagamentos de assinaturas, que tratam os dados apenas para prestar esses serviços. Não vendemos dados pessoais.
+        e-mails, processamento de pagamentos de assinaturas e, se você consentir, estatísticas de uso (Google Analytics, do Google LLC), que
+        tratam os dados apenas para prestar esses serviços. Alguns desses fornecedores ficam fora do Brasil (por exemplo, nos Estados Unidos);
+        nesses casos a transferência internacional segue o art. 33 da LGPD, com cláusulas contratuais de proteção de dados. Não vendemos dados
+        pessoais.
       </p>
     ),
   },
   {
+    id: 'cookies',
     title: '5. Cookies',
-    body: <p>Usamos apenas cookies e armazenamento local necessários para manter sua sessão conectada e suas preferências. Não usamos cookies de publicidade.</p>,
+    body: (
+      <>
+        <p>
+          Cookies são pequenos arquivos guardados no seu navegador. Usamos dois tipos, e os opcionais só são ativados se você permitir no aviso
+          de cookies:
+        </p>
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full min-w-[520px] text-left text-sm">
+            <thead className="text-xs uppercase tracking-label text-ink-subtle">
+              <tr>
+                <th className="py-2 pr-4 font-semibold">Tipo</th>
+                <th className="py-2 pr-4 font-semibold">Nome</th>
+                <th className="py-2 pr-4 font-semibold">Para que serve</th>
+                <th className="py-2 font-semibold">Duração</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-surface-low align-top">
+              <tr>
+                <td className="py-2 pr-4 font-semibold text-ink">Essencial</td>
+                <td className="py-2 pr-4">Cookie de sessão (httpOnly)</td>
+                <td className="py-2 pr-4">Mantém você conectado com segurança.</td>
+                <td className="py-2">Até 30 dias ou até sair</td>
+              </tr>
+              <tr>
+                <td className="py-2 pr-4 font-semibold text-ink">Essencial</td>
+                <td className="py-2 pr-4">barberos:cookie-consent (armazenamento local)</td>
+                <td className="py-2 pr-4">Guarda a sua escolha sobre cookies.</td>
+                <td className="py-2">12 meses</td>
+              </tr>
+              <tr>
+                <td className="py-2 pr-4 font-semibold text-ink">Essencial</td>
+                <td className="py-2 pr-4">Preferências (armazenamento local/da sessão)</td>
+                <td className="py-2 pr-4">Lembra escolhas da interface, como a etapa do agendamento.</td>
+                <td className="py-2">Até limpar o navegador</td>
+              </tr>
+              <tr>
+                <td className="py-2 pr-4 font-semibold text-ink">Estatísticas (opcional)</td>
+                <td className="py-2 pr-4">_ga, _ga_&lt;ID&gt; (Google Analytics)</td>
+                <td className="py-2 pr-4">Contam visitas e páginas mais usadas, de forma agregada. Sem publicidade e sem Google Signals.</td>
+                <td className="py-2">13 meses</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-4">
+          Não usamos cookies de publicidade. Antes do seu consentimento, nenhum script do Google Analytics é carregado. Ao recusar ou revogar,
+          os cookies de estatísticas são apagados. O endereço das páginas enviado ao Google não inclui códigos de convite, links de confirmação
+          nem identificadores de clientes, e não enviamos seu nome, e-mail ou telefone. Registramos cada escolha (data, versão desta política e
+          uma versão cifrada do IP) para comprovar o consentimento, conforme o art. 8º da LGPD.
+        </p>
+        <p className="mt-4">Você pode mudar sua escolha a qualquer momento (versão da política de cookies: {COOKIE_POLICY_VERSION}).</p>
+        <Button variant="secondary" className="mt-3" onClick={openCookiePreferences}>
+          Preferências de cookies
+        </Button>
+      </>
+    ),
   },
   {
     title: '6. Seus direitos',
     body: (
       <>
-        <p>Você pode, a qualquer momento, solicitar confirmação de tratamento, acesso, correção, portabilidade, anonimização ou exclusão dos seus dados e revogar consentimentos.</p>
+        <p>
+          Você pode, a qualquer momento, solicitar confirmação de tratamento, acesso, correção, portabilidade, anonimização ou exclusão dos seus
+          dados e revogar consentimentos — o de cookies, direto em “Cookies” no rodapé do site.
+        </p>
         <p className="mt-3">
           Em <Link to="/conta" className="font-semibold text-primary-600 hover:underline">Minha conta</Link> você pode exportar seus dados e excluir sua conta. Ao excluir, seus dados
           pessoais são anonimizados; registros de agendamentos e pagamentos permanecem sem identificação, para cumprimento de obrigações das barbearias.
@@ -168,13 +236,6 @@ const LegalPage = ({ kind }: { kind: 'terms' | 'privacy' }) => {
       <h1 className="mt-2 text-[28px] font-bold leading-9 tracking-[-0.02em] text-ink sm:text-4xl sm:leading-10">{content.title}</h1>
       <p className="mt-2 text-sm text-ink-variant">Versão {TERMS_VERSION}</p>
 
-      <div className="mt-6 flex gap-3 rounded-xl bg-tertiary-fixed px-4 py-3 text-sm text-tertiary" role="note">
-        <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
-        <p>
-          <strong>Minuta sujeita a revisão jurídica.</strong> Este texto é um rascunho e pode mudar antes da versão definitiva.
-        </p>
-      </div>
-
       <nav className="mt-8 flex gap-1 rounded-lg bg-surface-low p-1 text-sm font-semibold" aria-label="Documentos legais">
         <Link to="/termos" aria-current={kind === 'terms' ? 'page' : undefined} className={`flex-1 rounded-lg px-3 py-2 text-center ${kind === 'terms' ? 'bg-white text-primary-600 shadow-card' : 'text-ink-variant hover:text-ink'}`}>
           Termos de Uso
@@ -186,7 +247,7 @@ const LegalPage = ({ kind }: { kind: 'terms' | 'privacy' }) => {
 
       <div className="mt-10 space-y-10">
         {content.sections.map((section) => (
-          <section key={section.title}>
+          <section key={section.title} id={section.id} className="scroll-mt-24">
             <h2 className="text-lg font-bold leading-7 tracking-[-0.025em] text-ink">{section.title}</h2>
             <div className="mt-3 text-base leading-7 text-ink-variant">{section.body}</div>
           </section>
