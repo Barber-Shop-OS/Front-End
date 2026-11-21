@@ -138,6 +138,7 @@ export const ClientsScreen = ({
                           )}
                           <div className="mt-0.5 flex gap-1">
                             {client.has_account ? <Badge tone="blue">Com conta</Badge> : null}
+                            {client.blocked ? <Badge tone="red">Bloqueado</Badge> : null}
                             {client.no_shows ? <Badge tone="red">{client.no_shows} falta(s)</Badge> : null}
                           </div>
                         </div>

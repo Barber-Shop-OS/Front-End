@@ -2,16 +2,16 @@
 // atendimentos com pagamento. Requer o recurso clients_crm (planos Profissional/Rede).
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, CalendarPlus, Mail, MessageCircle, Pencil, Phone } from 'lucide-react';
+import { ArrowLeft, Ban, CalendarPlus, Mail, MessageCircle, Pencil, Phone, ShieldCheck } from 'lucide-react';
 
-import { Avatar, Badge, ButtonLink, Button, Card, CardTitle, EmptyState, ErrorState, ListSkeleton, Modal, PageHeader, StatusBadge } from '@/components/ui';
-import { useOwnerOpsClientQuery } from '@/features/owner-ops/api';
+import { Alert, Avatar, Badge, ButtonLink, Button, Card, CardTitle, ConfirmDialog, EmptyState, ErrorState, ListSkeleton, Modal, PageHeader, StatusBadge, Textarea, useToast } from '@/components/ui';
+import { useOwnerOpsClientQuery, useOwnerOpsUpdateClientMutation } from '@/features/owner-ops/api';
 import { WorkspaceGate } from '@/features/owner-ops/components';
 import { METHOD_LABEL, PAYMENT_STATUS_LABEL } from '@/features/owner-ops/metrics';
 import { ClientForm } from '@/features/owner-ops/staff';
 import { useActiveContext } from '@/features/workspace/useActiveContext';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { errorCode } from '@/utils/apiErrors';
+import { apiErrorMessage, errorCode } from '@/utils/apiErrors';
 import { formatDay, formatDateTime } from '@/utils/date';
 import { formatBRL, formatPhone, whatsappLink } from '@/utils/format';
 
@@ -19,6 +19,10 @@ const Content = ({ barbershopId }: { barbershopId: number }) => {
   const clientId = Number(useParams().clientId);
   const { data: client, isLoading, error, refetch } = useOwnerOpsClientQuery({ barbershopId, clientId });
   const [editing, setEditing] = useState(false);
+  const [blocking, setBlocking] = useState(false);
+  const [reason, setReason] = useState('');
+  const [updateClient, { isLoading: savingBlock }] = useOwnerOpsUpdateClientMutation();
+  const toast = useToast();
   usePageTitle(client?.name ?? 'Cliente');
 
   const back = (
@@ -45,6 +49,19 @@ const Content = ({ barbershopId }: { barbershopId: number }) => {
     );
   }
 
+  // SEC-21: bloqueio na barbearia — o cliente não agenda online; a equipe ainda agenda pelo balcão.
+  const toggleBlock = async () => {
+    const block = !client.blocked;
+    try {
+      await updateClient({ barbershopId, clientId: client.id, blocked: block, blocked_reason: block ? reason.trim() || null : null }).unwrap();
+      toast.success(block ? 'Cliente bloqueado para agendamento online.' : 'Cliente desbloqueado.');
+      setBlocking(false);
+      setReason('');
+    } catch (err) {
+      toast.error(apiErrorMessage(err));
+    }
+  };
+
   const wa = whatsappLink(client.phone, `Olá, ${client.name.split(' ')[0]}!`);
   const stats = [
     { label: 'Visitas', value: client.visits ?? 0 },
@@ -63,12 +80,25 @@ const Content = ({ barbershopId }: { barbershopId: number }) => {
             <Button variant="secondary" icon={<Pencil className="h-4 w-4" aria-hidden="true" />} onClick={() => setEditing(true)}>
               Editar
             </Button>
+            <Button
+              variant="secondary"
+              icon={client.blocked ? <ShieldCheck className="h-4 w-4" aria-hidden="true" /> : <Ban className="h-4 w-4" aria-hidden="true" />}
+              onClick={() => setBlocking(true)}
+            >
+              {client.blocked ? 'Desbloquear' : 'Bloquear'}
+            </Button>
             <ButtonLink to={`/dashboard/agendamentos/novo?cliente=${client.id}`} icon={<CalendarPlus className="h-4 w-4" aria-hidden="true" />}>
               Agendar
             </ButtonLink>
           </>
         }
       />
+      {client.blocked ? (
+        <Alert tone="error" className="mb-6">
+          Cliente bloqueado{client.blocked_at ? ` desde ${formatDay(client.blocked_at)}` : ''}: não consegue agendar online nesta barbearia. A equipe ainda pode agendar pelo balcão.
+          {client.blocked_reason ? ` Motivo: ${client.blocked_reason}` : ''}
+        </Alert>
+      ) : null}
       <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
         <div className="space-y-6">
           <Card>
@@ -76,7 +106,10 @@ const Content = ({ barbershopId }: { barbershopId: number }) => {
               <Avatar name={client.name} size="lg" />
               <div className="min-w-0">
                 <p className="truncate text-lg font-bold text-ink">{client.name}</p>
-                {client.has_account ? <Badge tone="blue">Tem conta no BarberOS</Badge> : <Badge>Cadastro do balcão</Badge>}
+                <div className="mt-1 flex flex-wrap gap-1">
+                  {client.has_account ? <Badge tone="blue">Tem conta no BarberOS</Badge> : <Badge>Cadastro do balcão</Badge>}
+                  {client.blocked ? <Badge tone="red">Bloqueado</Badge> : null}
+                </div>
               </div>
             </div>
             <ul className="mt-5 space-y-3 text-sm">
@@ -153,6 +186,24 @@ const Content = ({ barbershopId }: { barbershopId: number }) => {
       <Modal open={editing} onClose={() => setEditing(false)} title="Editar cliente">
         <ClientForm barbershopId={barbershopId} client={client} onCancel={() => setEditing(false)} onSaved={() => setEditing(false)} />
       </Modal>
+      <ConfirmDialog
+        open={blocking}
+        title={client.blocked ? 'Desbloquear cliente?' : 'Bloquear cliente?'}
+        description={
+          client.blocked
+            ? `${client.name} volta a poder agendar online nesta barbearia.`
+            : `${client.name} não conseguirá agendar online nesta barbearia (por exemplo, após faltas repetidas). A equipe ainda pode agendar pelo balcão.`
+        }
+        confirmLabel={client.blocked ? 'Desbloquear' : 'Bloquear'}
+        tone={client.blocked ? 'primary' : 'danger'}
+        loading={savingBlock}
+        onConfirm={toggleBlock}
+        onCancel={() => setBlocking(false)}
+      >
+        {client.blocked ? null : (
+          <Textarea label="Motivo (opcional, visível só para a equipe)" maxLength={255} rows={3} value={reason} onChange={(e) => setReason(e.target.value)} />
+        )}
+      </ConfirmDialog>
     </div>
   );
 };

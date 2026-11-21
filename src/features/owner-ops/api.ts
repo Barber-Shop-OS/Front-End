@@ -76,6 +76,9 @@ export interface ClientInput {
   phone: string;
   email?: string | null;
   notes?: string | null;
+  /** SEC-21: só dono/gerente. */
+  blocked?: boolean;
+  blocked_reason?: string | null;
 }
 
 
