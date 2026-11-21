@@ -8,6 +8,7 @@ import { Badge, Button, ConfirmDialog, EmptyState, ErrorState, ListSkeleton, Pag
 import { useOwnerOpsPaymentsQuery, useOwnerOpsSummaryQuery, useOwnerOpsUpdatePaymentStatusMutation, type PaymentRow } from '@/features/owner-ops/api';
 import { KpiCard, RevenueBars, WorkspaceGate } from '@/features/owner-ops/components';
 import { dailyBars, METHOD_LABEL, PAYMENT_STATUS_LABEL, pctChange, PERIOD_DAYS, PERIOD_LABEL, periodRange, previousRange, rangeToUtc, sumRevenue, type PeriodPreset } from '@/features/owner-ops/metrics';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { useActiveContext, type ActiveContext } from '@/features/workspace/useActiveContext';
 import type { PaymentMethod, PaymentStatus } from '@/types/api';
 import { apiErrorMessage } from '@/utils/apiErrors';
@@ -18,6 +19,7 @@ const STATUS_TONE: Record<PaymentStatus, BadgeTone> = { PAID: 'green', PENDING: 
 const PAGE_SIZE = 20;
 
 const FinancialPage = () => {
+  usePageTitle('Financeiro');
   const ctx = useActiveContext();
   return (
     <WorkspaceGate ctx={ctx} requireBranch={false}>

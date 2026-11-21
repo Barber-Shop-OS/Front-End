@@ -9,11 +9,13 @@ import { Alert, Avatar, buttonClass, EmptyState, ErrorState, ListSkeleton, PageH
 import { useOwnerOpsSummaryQuery } from '@/features/owner-ops/api';
 import { KpiCard, RevenueBars, WorkspaceGate } from '@/features/owner-ops/components';
 import { dailyBars, pctChange, PERIOD_DAYS, PERIOD_LABEL, periodRange, previousRange, serviceRows, sumRevenue, type PeriodPreset } from '@/features/owner-ops/metrics';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { useActiveContext, type ActiveContext } from '@/features/workspace/useActiveContext';
 import { addDays, DEFAULT_TIMEZONE, todayIn } from '@/utils/date';
 import { formatBRL } from '@/utils/format';
 
 const BranchEarningsPage = () => {
+  usePageTitle('Rendimentos da filial');
   const ctx = useActiveContext();
   return (
     <WorkspaceGate ctx={ctx}>

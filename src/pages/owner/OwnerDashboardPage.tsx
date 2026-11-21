@@ -10,6 +10,7 @@ import { useListAppointmentsQuery } from '@/features/appointments/api';
 import { DeltaBadge, KpiCard, RevenueBars, WorkspaceGate } from '@/features/owner-ops/components';
 import { useOwnerOpsSummaryQuery } from '@/features/owner-ops/api';
 import { appointmentClientName, dailyBars, pctChange, previousRange, sumRevenue } from '@/features/owner-ops/metrics';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { useActiveContext } from '@/features/workspace/useActiveContext';
 import { addDays, DEFAULT_TIMEZONE, formatShortDate, formatTime, todayIn, toLocalDate } from '@/utils/date';
 import { formatBRL } from '@/utils/format';
@@ -23,6 +24,7 @@ const dayMonth = (date: string) => {
 type Scope = 'branch' | 'all';
 
 const OwnerDashboardPage = () => {
+  usePageTitle('Painel');
   const ctx = useActiveContext();
   return (
     <WorkspaceGate ctx={ctx}>
