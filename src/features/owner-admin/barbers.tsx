@@ -7,7 +7,7 @@ import { Mail, MoreHorizontal, Power, RefreshCw, Scissors, UserPlus, X } from 'l
 import { Avatar, Badge, Button, ConfirmDialog, EmptyState, Input, Modal, Select, Textarea, useToast } from '@/components/ui';
 import type { Branch } from '@/types/api';
 import { apiErrorMessage, errorCode, fieldErrors } from '@/utils/apiErrors';
-import { formatDate } from '@/utils/date';
+import { formatDay } from '@/utils/date';
 
 import {
   useOwnerAddBarberToBranchMutation,
@@ -308,7 +308,7 @@ export const BranchInvitations = ({ branchId, title }: { branchId: number; title
             <div className="min-w-0 flex-1">
               <p className="truncate font-semibold text-ink">{invitation.display_name || invitation.email}</p>
               <p className="truncate text-xs text-ink-variant">
-                {invitation.email} · {invitation.status === 'expired' ? 'expirou' : 'expira'} em {formatDate(invitation.expires_at)}
+                {invitation.email} · {invitation.status === 'expired' ? 'expirou' : 'expira'} em {formatDay(invitation.expires_at)}
               </p>
             </div>
             <Badge tone={INVITATION_STATUS[invitation.status].tone}>{INVITATION_STATUS[invitation.status].label}</Badge>

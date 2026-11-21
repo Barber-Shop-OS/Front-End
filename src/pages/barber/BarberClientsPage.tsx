@@ -10,7 +10,7 @@ import { isFrequentClient } from '@/features/barber/helpers';
 import type { BarberClientFilters } from '@/features/barber/types';
 import { useBarberProfile } from '@/features/barber/useBarberProfile';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { formatDate } from '@/utils/date';
+import { formatDay } from '@/utils/date';
 import { formatBRL, formatPhone, whatsappLink } from '@/utils/format';
 
 type Sort = NonNullable<BarberClientFilters['sortBy']>;
@@ -82,7 +82,7 @@ const BarberClientsPage = () => {
                     </div>
                     <div>
                       <dt className="text-[11px] font-semibold uppercase tracking-label text-ink-variant">Última</dt>
-                      <dd className="text-sm font-bold text-ink">{c.last_visit ? formatDate(c.last_visit) : '—'}</dd>
+                      <dd className="text-sm font-bold text-ink">{c.last_visit ? formatDay(c.last_visit) : '—'}</dd>
                     </div>
                     <div>
                       <dt className="text-[11px] font-semibold uppercase tracking-label text-ink-variant">Gasto</dt>

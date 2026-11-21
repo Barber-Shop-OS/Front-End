@@ -12,7 +12,7 @@ import { ClientForm } from '@/features/owner-ops/staff';
 import { useActiveContext } from '@/features/workspace/useActiveContext';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { errorCode } from '@/utils/apiErrors';
-import { formatDate, formatDateTime } from '@/utils/date';
+import { formatDay, formatDateTime } from '@/utils/date';
 import { formatBRL, formatPhone, whatsappLink } from '@/utils/format';
 
 const Content = ({ barbershopId }: { barbershopId: number }) => {
@@ -49,7 +49,7 @@ const Content = ({ barbershopId }: { barbershopId: number }) => {
   const stats = [
     { label: 'Visitas', value: client.visits ?? 0 },
     { label: 'Faltas', value: client.no_shows ?? 0 },
-    { label: 'Última visita', value: client.last_visit ? formatDate(client.last_visit) : '—' },
+    { label: 'Última visita', value: client.last_visit ? formatDay(client.last_visit) : '—' },
     { label: 'Total gasto', value: formatBRL(client.total_spent) },
   ];
 

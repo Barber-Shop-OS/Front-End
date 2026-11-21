@@ -8,7 +8,7 @@ import { useAuth } from '@/features/auth/hooks';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import type { BackendRole, User } from '@/types/api';
 import { apiErrorMessage } from '@/utils/apiErrors';
-import { formatDate } from '@/utils/date';
+import { formatDay } from '@/utils/date';
 
 const ROLE_LABEL: Record<BackendRole, string> = { cliente: 'Cliente', barbeiro: 'Barbeiro', owner: 'Dono', admin: 'Admin' };
 const ROLES = Object.keys(ROLE_LABEL) as BackendRole[];
@@ -71,7 +71,7 @@ const AdminUsersPage = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   {u.email_verified_at ? <Badge tone="green">Verificado</Badge> : <Badge tone="yellow">Não verificado</Badge>}
-                  {u.created_at ? <span className="hidden text-xs text-ink-subtle md:inline">desde {formatDate(u.created_at)}</span> : null}
+                  {u.created_at ? <span className="hidden text-xs text-ink-subtle md:inline">desde {formatDay(u.created_at)}</span> : null}
                 </div>
                 <Select
                   aria-label={`Papel de ${u.name}`}

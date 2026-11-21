@@ -13,7 +13,7 @@ import { useActiveContext } from '@/features/workspace/useActiveContext';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import type { Branch } from '@/types/api';
 import { apiErrorMessage, errorCode } from '@/utils/apiErrors';
-import { formatDate } from '@/utils/date';
+import { formatDay } from '@/utils/date';
 
 const MemberModal = ({
   open,
@@ -206,7 +206,7 @@ const ManagersPage = () => {
                   <Badge tone={member.role === 'manager' ? 'blue' : 'orange'}>{MEMBER_ROLE_LABEL[member.role]}</Badge>
                   <span className="truncate text-sm text-ink-variant">{branchLabel(member)}</span>
                 </div>
-                <span className="hidden text-xs text-ink-subtle lg:block lg:w-28">desde {formatDate(member.created_at)}</span>
+                <span className="hidden text-xs text-ink-subtle lg:block lg:w-28">desde {formatDay(member.created_at)}</span>
                 <div className="flex gap-1">
                   {editable ? (
                     <>

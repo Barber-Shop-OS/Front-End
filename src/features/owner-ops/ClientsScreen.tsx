@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { CalendarPlus, Lock, Search, UserPlus, UsersRound } from 'lucide-react';
 
 import { Alert, Avatar, Badge, ButtonLink, EmptyState, ErrorState, ListSkeleton, PageHeader, Pagination, Select } from '@/components/ui';
-import { formatDate } from '@/utils/date';
+import { formatDay } from '@/utils/date';
 import { formatBRL, formatPhone } from '@/utils/format';
 
 import { useOwnerOpsClientsQuery, type ClientListParams } from './api';
@@ -150,7 +150,7 @@ export const ClientsScreen = ({
                     {crm ? (
                       <>
                         <td className="px-6 py-4 text-right font-semibold text-ink">{client.visits ?? 0}</td>
-                        <td className="px-6 py-4 text-ink-variant">{client.last_visit ? formatDate(client.last_visit) : '—'}</td>
+                        <td className="px-6 py-4 text-ink-variant">{client.last_visit ? formatDay(client.last_visit) : '—'}</td>
                         <td className="px-6 py-4 text-right font-semibold text-ink">{formatBRL(client.total_spent)}</td>
                       </>
                     ) : null}
@@ -185,7 +185,7 @@ export const ClientsScreen = ({
                 </div>
                 {crm ? (
                   <p className="mt-2 text-xs text-ink-variant">
-                    {client.visits ?? 0} visita(s) · última {client.last_visit ? formatDate(client.last_visit) : '—'} · {formatBRL(client.total_spent)}
+                    {client.visits ?? 0} visita(s) · última {client.last_visit ? formatDay(client.last_visit) : '—'} · {formatBRL(client.total_spent)}
                   </p>
                 ) : null}
               </li>

@@ -8,7 +8,7 @@ import { SUBSCRIPTION_STATUS } from '@/features/owner-admin/utils';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import type { SubscriptionStatus } from '@/types/api';
 import { apiErrorMessage } from '@/utils/apiErrors';
-import { formatDate } from '@/utils/date';
+import { formatDay } from '@/utils/date';
 
 const SHOP_STATUS: Record<AdminBarbershop['status'], { label: string; tone: 'green' | 'red' | 'gray' }> = {
   active: { label: 'Ativa', tone: 'green' },
@@ -111,7 +111,7 @@ const AdminBarbershopsPage = () => {
                           <Badge tone={SUBSCRIPTION_STATUS[shop.subscription.status].tone}>{SUBSCRIPTION_STATUS[shop.subscription.status].label}</Badge>
                           <p className="mt-1 text-xs capitalize text-ink-variant">
                             {shop.subscription.plan_code}
-                            {shop.subscription.status === 'trialing' && shop.subscription.trial_ends_at ? ` · até ${formatDate(shop.subscription.trial_ends_at)}` : ''}
+                            {shop.subscription.status === 'trialing' && shop.subscription.trial_ends_at ? ` · até ${formatDay(shop.subscription.trial_ends_at)}` : ''}
                           </p>
                         </>
                       ) : (
@@ -120,7 +120,7 @@ const AdminBarbershopsPage = () => {
                     </td>
                     <td className="px-4 py-3">
                       <Badge tone={SHOP_STATUS[shop.status].tone}>{SHOP_STATUS[shop.status].label}</Badge>
-                      <p className="mt-1 text-xs text-ink-subtle">desde {formatDate(shop.created_at)}</p>
+                      <p className="mt-1 text-xs text-ink-subtle">desde {formatDay(shop.created_at)}</p>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex justify-end gap-1">

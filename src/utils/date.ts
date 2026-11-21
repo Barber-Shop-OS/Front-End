@@ -10,6 +10,10 @@ const toDate = (value: string | Date): Date => (value instanceof Date ? value : 
 export const formatDate = (value: string | Date, timeZone?: string): string =>
   fmt({ weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' }, timeZone).format(toDate(value));
 
+/** "10/11/2026" (sem dia da semana — para tabelas e cartões estreitos) */
+export const formatDay = (value: string | Date, timeZone?: string): string =>
+  fmt({ day: '2-digit', month: '2-digit', year: 'numeric' }, timeZone).format(toDate(value));
+
 /** "10/11" */
 export const formatShortDate = (value: string | Date, timeZone?: string): string =>
   fmt({ day: '2-digit', month: '2-digit' }, timeZone).format(toDate(value));
