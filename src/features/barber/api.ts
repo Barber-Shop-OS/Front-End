@@ -1,4 +1,5 @@
 // Área do barbeiro: métricas próprias (BE-24/BE-53), clientes atendidos, jornada, bloqueios e pagamento presencial.
+import { normalizePaymentRows } from '@/features/owner-ops/api';
 import { baseApi } from '@/services/baseApi';
 import type { Client, Paginated, Payment, PaymentMethod } from '@/types/api';
 
@@ -41,6 +42,7 @@ export const barberApi = baseApi.injectEndpoints({
     /** Pagamentos dos próprios atendimentos (mais recentes primeiro). */
     listBarberPayments: build.query<BarberPaymentsPage, { page?: number; pageSize?: number; status?: string }>({
       query: (params) => ({ url: '/payment', params: { ...params } }),
+      transformResponse: (response: unknown) => normalizePaymentRows<BarberPaymentsPage>(response),
       providesTags: [{ type: 'Payment', id: 'LIST' }],
     }),
     /** Pagamento do agendamento; null quando ainda não há registro (404). */

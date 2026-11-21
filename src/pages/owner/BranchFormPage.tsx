@@ -43,6 +43,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import type { Branch, BranchClosure } from '@/types/api';
 import { apiErrorMessage, fieldErrors } from '@/utils/apiErrors';
 import { WEEKDAYS, formatLocalDateLong, todayIn } from '@/utils/date';
+import { formatPhone } from '@/utils/format';
 
 const DEFAULT_WEEK: DaySchedule[] = toWeek(
   [1, 2, 3, 4, 5, 6].map((weekday) => ({ weekday, start: '09:00', end: weekday === 6 ? '18:00' : '20:00' }))
@@ -64,8 +65,8 @@ const emptyValues: BranchFormValues = {
 
 const valuesFrom = (branch: Branch): BranchFormValues => ({
   name: branch.name,
-  phone: branch.phone ?? '',
-  whatsapp: branch.whatsapp ?? '',
+  phone: formatPhone(branch.phone) || '',
+  whatsapp: formatPhone(branch.whatsapp) || '',
   timezone: branch.timezone || 'America/Sao_Paulo',
   cep: maskCep(branch.Address?.cep ?? ''),
   street: branch.Address?.street ?? '',

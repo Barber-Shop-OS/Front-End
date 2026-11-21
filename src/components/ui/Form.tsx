@@ -29,7 +29,7 @@ export const Field = ({ label, hint, error, required, className, children }: Fie
           {error}
         </p>
       ) : hint ? (
-        <p id={`${id}-hint`} className="text-xs text-ink-variant">
+        <p id={`${id}-hint`} className="break-words text-xs text-ink-variant">
           {hint}
         </p>
       ) : null}

@@ -78,6 +78,18 @@ export interface ClientInput {
   notes?: string | null;
 }
 
+
+/** GET /payment devolve `appointment` (com `barber`) em minúsculas; o app usa `Appointment` / `Barber`. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const normalizePaymentRows = <T,>(page: any): T => ({
+  ...page,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  items: (page?.items ?? []).map((item: any) => {
+    const appt = item.Appointment ?? item.appointment ?? null;
+    return { ...item, Appointment: appt ? { ...appt, Barber: appt.Barber ?? appt.barber ?? null } : null };
+  }),
+});
+
 export const ownerOpsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     ownerOpsSummary: build.query<OwnerSummary, SummaryParams>({
@@ -86,6 +98,7 @@ export const ownerOpsApi = baseApi.injectEndpoints({
     }),
     ownerOpsPayments: build.query<PaymentList, PaymentListParams>({
       query: (params) => ({ url: '/payment', params: { ...params } }),
+      transformResponse: (response: unknown) => normalizePaymentRows<PaymentList>(response),
       providesTags: (result) => [...(result?.items ?? []).map((item) => ({ type: 'Payment' as const, id: item.id })), { type: 'Payment', id: 'LIST' }],
     }),
     ownerOpsAppointmentPayment: build.query<Payment | null, number>({

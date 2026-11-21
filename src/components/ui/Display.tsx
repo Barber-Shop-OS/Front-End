@@ -6,7 +6,7 @@ import type { AppointmentStatus } from '@/types/api';
 import { cn } from '@/utils/cn';
 
 export const Card = ({ children, className, padded = true }: { children: ReactNode; className?: string; padded?: boolean }) => (
-  <section className={cn('rounded-xl bg-white shadow-card', padded && 'p-4 sm:p-6', className)}>{children}</section>
+  <section className={cn('min-w-0 rounded-xl bg-white shadow-card', padded && 'p-4 sm:p-6', className)}>{children}</section>
 );
 
 export const CardTitle = ({ children, action }: { children: ReactNode; action?: ReactNode }) => (

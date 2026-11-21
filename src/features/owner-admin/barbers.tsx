@@ -165,7 +165,7 @@ export const BarbersTable = ({
   return (
     <>
       {/* Desktop: tabela */}
-      <div className="hidden overflow-hidden rounded-xl bg-white shadow-card md:block">
+      <div className="hidden overflow-x-auto rounded-xl bg-white shadow-card lg:block">
         <table className="w-full text-left text-sm">
           <thead className="bg-surface-low text-xs font-semibold uppercase tracking-label text-ink-variant">
             <tr>
@@ -231,7 +231,7 @@ export const BarbersTable = ({
       </div>
 
       {/* Mobile: cartões */}
-      <ul className="space-y-3 md:hidden">
+      <ul className="grid gap-3 sm:grid-cols-2 lg:hidden">
         {barbers.map((barber) => (
           <li key={barber.id} className="rounded-xl bg-white p-4 shadow-card">
             <div className="flex items-center gap-3">

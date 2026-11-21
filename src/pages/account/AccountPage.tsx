@@ -460,7 +460,7 @@ const AccountPage = () => {
       <PageHeader title="Perfil & Notificações" description="Gerencie seus dados, segurança e avisos." />
       <EmailVerificationBanner />
       <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
-        <aside className="space-y-4">
+        <aside className="min-w-0 space-y-4">
           <Card className="flex items-center gap-3 lg:flex-col lg:text-center">
             <Avatar name={user?.name} size="lg" />
             <div className="min-w-0">

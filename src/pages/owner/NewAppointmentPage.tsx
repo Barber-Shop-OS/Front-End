@@ -146,15 +146,15 @@ const Content = ({ ctx, basePath }: { ctx: ActiveContext; basePath: string }) =>
   const [notes, setNotes] = useState('');
   const [idempotencyKey, setIdempotencyKey] = useState(newKey);
 
-  const { data: pre } = useOwnerOpsClientQuery(preClientId ? { barbershopId, clientId: preClientId } : skipToken);
+  const { data: pre, isError: preFailed } = useOwnerOpsClientQuery(preClientId ? { barbershopId, clientId: preClientId } : skipToken);
   useEffect(() => {
     if (pre && !client) setClient({ id: pre.id, name: pre.name, phone: pre.phone });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pre]);
   useEffect(() => {
-    if (preClientId && !client && !pre) setClient({ id: preClientId, name: `Cliente #${preClientId}`, phone: null });
+    if (preClientId && !client && preFailed) setClient({ id: preClientId, name: `Cliente #${preClientId}`, phone: null });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [preClientId]);
+  }, [preClientId, preFailed]);
 
   const { data: services = [], isLoading: servicesLoading } = useOwnerOpsServicesQuery(barbershopId);
   const { data: barbers = [] } = useOwnerOpsBarbersQuery(serviceId ? { branch_id: branch.id, service_id: serviceId } : skipToken);

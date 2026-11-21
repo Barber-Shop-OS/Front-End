@@ -73,8 +73,8 @@ export const AgendaScreen = ({ ctx, newAppointmentPath, title }: { ctx: ActiveCo
           {label}
           {isFetching && !isLoading ? <span className="ml-2 text-xs font-normal text-ink-subtle">atualizando…</span> : null}
         </p>
-        <div className="flex flex-wrap items-center gap-2">
-          <Select aria-label="Barbeiro" className="h-10" containerClassName="w-48" value={barberId} onChange={(e) => setBarberId(e.target.value ? Number(e.target.value) : '')}>
+        <div className="grid grid-cols-2 items-center gap-2 sm:flex sm:flex-wrap">
+          <Select aria-label="Barbeiro" className="h-10" containerClassName="min-w-0 sm:w-48" value={barberId} onChange={(e) => setBarberId(e.target.value ? Number(e.target.value) : '')}>
             <option value="">Todos os barbeiros</option>
             {barbers.map((b) => (
               <option key={b.id} value={b.id}>
@@ -82,21 +82,23 @@ export const AgendaScreen = ({ ctx, newAppointmentPath, title }: { ctx: ActiveCo
               </option>
             ))}
           </Select>
-          <Select aria-label="Status" className="h-10" containerClassName="w-44" value={status} onChange={(e) => setStatus(e.target.value as AppointmentStatus | '')}>
+          <Select aria-label="Status" className="h-10" containerClassName="min-w-0 sm:w-44" value={status} onChange={(e) => setStatus(e.target.value as AppointmentStatus | '')}>
             <option value="">Todos os status</option>
             <option value="confirmado">Confirmados</option>
             <option value="concluido">Concluídos</option>
             <option value="nao_compareceu">Não compareceu</option>
             <option value="cancelado">Cancelados</option>
           </Select>
-          <Tabs
-            value={view}
-            onChange={setView}
-            tabs={[
-              { value: 'day', label: 'Dia' },
-              { value: 'week', label: 'Semana' },
-            ]}
-          />
+          <div className="col-span-2 sm:col-span-1">
+            <Tabs
+              value={view}
+              onChange={setView}
+              tabs={[
+                { value: 'day', label: 'Dia' },
+                { value: 'week', label: 'Semana' },
+              ]}
+            />
+          </div>
         </div>
       </div>
 
