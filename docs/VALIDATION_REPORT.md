@@ -25,7 +25,7 @@ Ambiente "produção local": `vite build` + `vite preview` (porta 4173, `.env.pr
 
 | # | Problema | Correção |
 |---|---|---|
-| 1 | `/auth/refresh` dividia a cota de 10/15 min do login: poucas recargas → 429 → sessão perdida | SEC-30 (back): `refreshLimiter` próprio (120/15 min) |
+| 1 | `/auth/refresh` dividia a cota de 10/15 min do login: poucas recargas → 429 → sessão perdida | SEC-30 (back): `refreshLimiter` próprio (600/15 min) |
 | 2 | Recepcionista caía em `/cliente`: a API envia a recepção em `front_desk[]`, o front lia `barbershops[]` | `normalizeMe` no front converte `front_desk` em barbearias `receptionist` |
 | 3 | "Sessões ativas" na web não marcava a sessão atual (cookie com `Path=/api/auth` não chega a `/api/me`) | BE-54 (back): `sid` no access token |
 | 4 | Aba aberta durante um deploy quebrava ao abrir outra página (chunk antigo inexistente) | Recarga automática única quando o import de uma página falha |
