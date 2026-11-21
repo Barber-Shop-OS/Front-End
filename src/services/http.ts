@@ -19,7 +19,7 @@ export const isApiError = (value: unknown): value is ApiError =>
 
 /** Converte qualquer erro em ApiError { status, message, code, details }. */
 export const normalizeApiError = (error: unknown): ApiError => {
-  if (isApiError(error)) return error;
+  // AxiosError (axios ≥ 1.7) também tem `status` e `message`: tratar antes de isApiError.
   if (error instanceof AxiosError) {
     const data = error.response?.data as { message?: unknown; code?: unknown; details?: unknown } | undefined;
     if (!error.response) {
@@ -32,6 +32,7 @@ export const normalizeApiError = (error: unknown): ApiError => {
       details: data?.details,
     };
   }
+  if (isApiError(error)) return error;
   return { status: 500, message: 'Erro inesperado.', code: 'INTERNAL' };
 };
 

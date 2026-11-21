@@ -18,21 +18,27 @@ interface ModalProps {
 
 export const Modal = ({ open, onClose, title, children, footer, size = 'md' }: ModalProps) => {
   const dialogRef = useRef<HTMLDivElement>(null);
+  // onClose costuma ser uma arrow nova a cada render: guardado em ref para o efeito rodar só ao abrir/fechar
+  // (antes o foco voltava ao diálogo a cada tecla digitada num campo do modal).
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
 
   useEffect(() => {
     if (!open) return undefined;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === 'Escape') closeRef.current();
     };
     document.addEventListener('keydown', onKey);
     const previous = document.body.style.overflow;
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     document.body.style.overflow = 'hidden';
     dialogRef.current?.focus();
     return () => {
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = previous;
+      if (opener?.isConnected) opener.focus();
     };
-  }, [open, onClose]);
+  }, [open]);
 
   if (!open) return null;
   return createPortal(
