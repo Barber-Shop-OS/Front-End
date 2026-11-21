@@ -40,7 +40,7 @@ por feature com `injectEndpoints`) + react-router 6 (`src/App.tsx`, páginas laz
 | E | Dono — gestão: filiais, barbeiros, serviços, equipe, assinatura, checkout, configurações | ✅ |
 | F | Barbeiro: dashboard, agendamentos, rendimentos, clientes, folgas | ✅ |
 | G | Atendimento (4 telas) + admin — depende do BE-49/50 | ✅ |
-| V | Auditoria E2E no navegador (Claude in Chrome) em produção local, por perfil + responsividade; correções; `VALIDATION_REPORT.md` | ✅ desktop (mobile pendente) |
+| V | Auditoria E2E no navegador (Claude in Chrome) em produção local, por perfil + responsividade; correções; `VALIDATION_REPORT.md` | ✅ desktop, tablet e celular |
 
 ## 4. Estado em 21/11
 
@@ -48,9 +48,8 @@ Todas as telas do inventário implementadas (nenhum stub restante). Validação 
 local (vite build + preview; API em docker com MySQL) — ver `docs/VALIDATION_REPORT.md`.
 
 Pendências:
-1. Revisão de responsividade em largura de celular.
-2. Revisão de fidelidade visual tela a tela contra o Figma (a cota do Figma MCP do plano Starter acabou nesta sessão).
-3. Testes de componentes (Testing Library/MSW) das telas novas — hoje há testes das regras puras.
+1. Revisão de fidelidade visual tela a tela contra o Figma (a cota do Figma MCP do plano Starter acabou nesta sessão).
+2. Testes de componentes (Testing Library/MSW) das telas novas — hoje há testes das regras puras.
 
 ## 5. Riscos e limitações conhecidas
 - OneDrive: arquivos podem virar placeholders ilegíveis; commits sempre com `git add` explícito.
