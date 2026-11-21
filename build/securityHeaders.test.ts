@@ -11,6 +11,10 @@ describe('cabeçalhos de segurança (SEC-17)', () => {
     expect(csp).not.toContain("'unsafe-eval'");
   });
 
+  it('origem do bucket de imagens opcional entra em img-src', () => {
+    expect(contentSecurityPolicy('https://api.x.com', 'http://localhost:9090/barberos')).toContain("img-src 'self' data: blob: https: http://localhost:9090;");
+  });
+
   it('URL inválida não entra na CSP', () => {
     expect(contentSecurityPolicy('não é url')).toContain("connect-src 'self' https://viacep.com.br");
   });

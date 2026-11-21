@@ -16,8 +16,13 @@ const origin = (url: string | undefined): string | null => {
   }
 };
 
-export const contentSecurityPolicy = (apiBaseUrl: string | undefined): string => {
+/**
+ * @param imagesOrigin VITE_IMAGES_ORIGIN — origem pública do bucket de imagens quando não é https (ex.: bucket local
+ *   http://localhost:9090); em produção o R2 é https e já está coberto por `https:`.
+ */
+export const contentSecurityPolicy = (apiBaseUrl: string | undefined, imagesOrigin?: string): string => {
   const api = origin(apiBaseUrl);
+  const images = origin(imagesOrigin);
   const directives: Record<string, string[]> = {
     'default-src': ["'self'"],
     'script-src': ["'self'", `${GOOGLE}/gsi/client`],
@@ -25,7 +30,7 @@ export const contentSecurityPolicy = (apiBaseUrl: string | undefined): string =>
     'style-src': ["'self'", "'unsafe-inline'", FONTS_CSS, `${GOOGLE}/gsi/style`],
     'font-src': ["'self'", FONTS_FILES],
     // Logos/fotos vêm do bucket público (R2, domínio definido no deploy); QR code do 2FA é data:.
-    'img-src': ["'self'", 'data:', 'blob:', 'https:'],
+    'img-src': ["'self'", 'data:', 'blob:', 'https:', ...(images ? [images] : [])],
     'connect-src': ["'self'", ...(api ? [api] : []), VIACEP, `${GOOGLE}/gsi/`],
     'frame-src': [`${GOOGLE}/gsi/`],
     'frame-ancestors': ["'none'"],
@@ -40,10 +45,10 @@ export const contentSecurityPolicy = (apiBaseUrl: string | undefined): string =>
     .join('; ');
 };
 
-export const headersFile = (apiBaseUrl: string | undefined): string =>
+export const headersFile = (apiBaseUrl: string | undefined, imagesOrigin?: string): string =>
   [
     '/*',
-    `  Content-Security-Policy: ${contentSecurityPolicy(apiBaseUrl)}`,
+    `  Content-Security-Policy: ${contentSecurityPolicy(apiBaseUrl, imagesOrigin)}`,
     '  Strict-Transport-Security: max-age=31536000; includeSubDomains',
     '  X-Content-Type-Options: nosniff',
     '  X-Frame-Options: DENY',
