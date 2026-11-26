@@ -16,7 +16,7 @@
     "gen:api": "openapi-typescript ../Back-End/docs/openapi.json -o src/types/openapi.d.ts"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.9.2",
+    "@hookform/resolvers": "^7.0.8",
     "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.7",
     "gsap": "^3.15.1",
