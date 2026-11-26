@@ -7,6 +7,13 @@ import App from '@/App';
 import { persistor, store } from '@/store';
 import '@/index.css';
 
+// SEC-15: remove a sessão antiga que ficava em localStorage (chave do redux-persist anterior).
+try {
+  window.localStorage.removeItem('persist:root');
+} catch {
+  /* storage indisponível: nada a limpar */
+}
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>

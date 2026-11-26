@@ -4,8 +4,9 @@ interface BranchHeroProps {
   badge: string;
   name: string;
   address: string;
-  rating: number;
-  reviewsCount: number;
+  /** Avaliação média — oculta enquanto o backend não tiver avaliações. */
+  rating?: number;
+  reviewsCount?: number;
   coverImage: string;
 }
 
@@ -36,10 +37,15 @@ const BranchHero = ({
             <MapPin className="h-4 w-4" />
             {address}
           </span>
-          <span className="flex items-center gap-1">
-            <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-            {rating.toFixed(1)} ({reviewsCount.toLocaleString("pt-BR")} avaliações)
-          </span>
+          {rating !== undefined ? (
+            <span className="flex items-center gap-1">
+              <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+              {rating.toFixed(1)}
+              {reviewsCount !== undefined
+                ? ` (${reviewsCount.toLocaleString("pt-BR")} avaliações)`
+                : null}
+            </span>
+          ) : null}
         </div>
       </div>
     </div>

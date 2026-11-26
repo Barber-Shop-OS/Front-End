@@ -17,8 +17,7 @@ interface RoleRouteProps {
  * Guard de autenticação + role.
  * - Durante o bootstrap de sessão (idle/loading), exibe loader.
  * - Usuário não autenticado -> /login
- * - Usuário autenticado sem role definida -> libera acesso (fallback atual,
- *   até o backend retornar a role).
+ * - Usuário autenticado sem role reconhecida -> redireciona (nega acesso).
  * - Usuário com role não permitida -> redireciona para a home do seu perfil.
  */
 const RoleRoute = ({
@@ -36,10 +35,9 @@ const RoleRoute = ({
     return <Navigate to="/login" replace />;
   }
 
-  // TODO: quando o backend passar a retornar auth.user.role, remover este
-  // fallback genérico para que o acesso seja restrito às roles permitidas.
+  // Sem role reconhecida não há permissão: nunca liberar por padrão.
   if (!userRole) {
-    return <Outlet />;
+    return <Navigate to={fallbackPath ?? "/"} replace />;
   }
 
   if (!allowedRoles.includes(userRole)) {

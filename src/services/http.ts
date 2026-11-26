@@ -22,6 +22,12 @@ const extractErrorMessage = (value: unknown): string | null => {
  * - Erros do Axios: usa `error.response.data.message` quando existir.
  * - Erros desconhecidos: retorna erro genérico 500.
  */
+const isApiError = (value: unknown): value is ApiError =>
+  typeof value === 'object' &&
+  value !== null &&
+  typeof (value as ApiError).status === 'number' &&
+  typeof (value as ApiError).message === 'string';
+
 export const normalizeApiError = (error: unknown): ApiError => {
   if (error instanceof AxiosError) {
     const apiMessage = extractErrorMessage(error.response?.data);
@@ -30,6 +36,12 @@ export const normalizeApiError = (error: unknown): ApiError => {
       status: error.response?.status ?? 500,
       message: apiMessage ?? error.message
     };
+  }
+
+  // O interceptor de resposta já rejeita com ApiError: não perder status/mensagem.
+  // (Checado depois do AxiosError, que também tem `status` e `message`.)
+  if (isApiError(error)) {
+    return { status: error.status, message: error.message };
   }
 
   return {

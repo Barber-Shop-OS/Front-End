@@ -7,7 +7,7 @@ export interface OpeningHour {
 interface OpeningHoursCardProps {
   title: string;
   openingHours: OpeningHour[];
-  phone: string;
+  phone?: string | null;
 }
 
 const OpeningHoursCard = ({
@@ -37,12 +37,16 @@ const OpeningHoursCard = ({
         ))}
       </div>
 
-      <hr className="my-5 border-slate-200" />
+      {phone ? (
+        <>
+          <hr className="my-5 border-slate-200" />
 
-      <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
-        Contato direto
-      </p>
-      <p className="mt-1 text-base font-bold text-slate-900">{phone}</p>
+          <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
+            Contato direto
+          </p>
+          <p className="mt-1 text-base font-bold text-slate-900">{phone}</p>
+        </>
+      ) : null}
     </div>
   );
 };

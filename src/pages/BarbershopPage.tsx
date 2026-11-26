@@ -1,104 +1,97 @@
 import { useNavigate, useParams } from "react-router-dom";
 
+import AsyncStatus, { EmptyState } from "@/components/feedback/AsyncStatus";
+import {
+  formatAddressLine,
+  formatCityState,
+  toNumberPrice,
+  usePublicBarbershop,
+} from "@/features/barbershop-profile/api/publicBarbershopApi";
 import BarbershopHero from "@/features/barbershop-profile/components/BarbershopHero";
 import BranchesSection, {
-  Branch,
+  type Branch,
 } from "@/features/barbershop-profile/components/BranchesSection";
 import ServicesSection, {
-  Service,
+  type Service,
 } from "@/features/barbershop-profile/components/ServicesSection";
 import SpecialistsSection, {
-  Specialist,
+  type Specialist,
 } from "@/features/barbershop-profile/components/SpecialistsSection";
 import AppLayout from "@/layouts/AppLayout";
+import { initialsAvatar } from "@/utils/avatar";
 
-// TODO: substituir por chamada real assim que a API estiver pronta
-// (ex: useGetBarbershopBySlugQuery(slug) vindo do params da rota /b/:slug)
-const branches: Branch[] = [
-  {
-    id: "jardins",
-    name: "Jardins",
-    street: "Rua Oscar Freire, 1234",
-    cityState: "São Paulo - SP",
-  },
-  {
-    id: "itaim-bibi",
-    name: "Itaim Bibi",
-    street: "Rua Joaquim Floriano, 800",
-    cityState: "São Paulo - SP",
-  },
-  {
-    id: "pinheiros",
-    name: "Pinheiros",
-    street: "Rua dos Pinheiros, 500",
-    cityState: "São Paulo - SP",
-  },
-];
+const DEFAULT_COVER =
+  "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=1200&q=80";
 
-const services: Service[] = [
-  { id: "corte-classico", name: "Corte Clássico", durationMinutes: 45, priceInReais: 80 },
-  { id: "barba-tradicional", name: "Barba Tradicional", durationMinutes: 30, priceInReais: 60 },
-  { id: "corte-barba", name: "Corte + Barba", durationMinutes: 75, priceInReais: 130 },
-  { id: "pigmentacao", name: "Pigmentação", durationMinutes: 40, priceInReais: 90 },
-];
-
-const specialists: Specialist[] = [
-  {
-    id: "ricardo-silva",
-    name: "Ricardo Silva",
-    specialty: "Corte clássico",
-    avatar: "https://i.pravatar.cc/160?img=13",
-  },
-  {
-    id: "marcelo-costa",
-    name: "Marcelo Costa",
-    specialty: "Barboterapia",
-    avatar: "https://i.pravatar.cc/160?img=15",
-  },
-  {
-    id: "andre-santos",
-    name: "André Santos",
-    specialty: "Pigmentação",
-    avatar: "https://i.pravatar.cc/160?img=17",
-  },
-  {
-    id: "joao-mendes",
-    name: "João Mendes",
-    specialty: "Master barber",
-    avatar: "https://i.pravatar.cc/160?img=33",
-  },
-];
-
+/** Página pública da barbearia — dados de GET /api/barbershop/slug/:slug. */
 const BarbershopPage = (): JSX.Element => {
   const navigate = useNavigate();
   const { slug } = useParams();
+  const { data: barbershop, loading, error } = usePublicBarbershop(slug);
 
-  const handleBookNow = () => navigate(`/b/${slug}/agendar`);
-  // Filial agora aninhada em /b/:slug/:branchId, mantendo o contexto
-  // de qual barbearia é dona daquela filial na própria URL
-  const handleSelectBranch = (branchId: string) => navigate(`/b/${slug}/${branchId}`);
+  if (loading || error || !barbershop) {
+    return (
+      <AppLayout>
+        <AsyncStatus loading={loading} error={error} notFoundMessage="Barbearia não encontrada." />
+      </AppLayout>
+    );
+  }
+
+  const branches: Branch[] = barbershop.branches.map((branch) => ({
+    id: String(branch.id),
+    name: branch.name,
+    street: formatAddressLine(branch.address),
+    cityState: formatCityState(branch.address),
+  }));
+
+  const services: Service[] = barbershop.services.map((service) => ({
+    id: String(service.id),
+    name: service.name,
+    durationMinutes: service.duration,
+    priceInReais: toNumberPrice(service.price),
+  }));
+
+  const specialists: Specialist[] = barbershop.barbers.map((barber) => {
+    const name = barber.display_name ?? "Profissional";
+    return {
+      id: String(barber.id),
+      name,
+      specialty: barber.services.map((service) => service.name).slice(0, 2).join(" · ") || "Barbeiro",
+      avatar: barber.photo_url ?? initialsAvatar(name),
+    };
+  });
+
+  const handleBookNow = () => navigate(`/b/${barbershop.slug}/agendar`);
+  const handleSelectBranch = (branchId: string) => navigate(`/b/${barbershop.slug}/${branchId}`);
   const handleAddService = (serviceId: string) =>
-    navigate(`/b/${slug}/agendar?servico=${serviceId}`);
+    navigate(`/b/${barbershop.slug}/agendar?servico=${serviceId}`);
   const handleSelectSpecialist = (specialistId: string) =>
-    navigate(`/b/${slug}/agendar?profissional=${specialistId}`);
+    navigate(`/b/${barbershop.slug}/agendar?profissional=${specialistId}`);
 
   return (
     <AppLayout>
       <BarbershopHero
-        name="A Arte da Precisão Digital."
-        tagline="Experimente o rigor de uma navalha e a sofisticação de uma alfaiataria clássica. Bem-vindo ao BarberOS."
-        coverImage="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=1200&q=80"
+        name={barbershop.name}
+        tagline={barbershop.description ?? ""}
+        coverImage={barbershop.cover_url ?? DEFAULT_COVER}
         onBookNow={handleBookNow}
       />
 
-      <BranchesSection branches={branches} onSelectBranch={handleSelectBranch} />
+      {branches.length > 0 ? (
+        <BranchesSection branches={branches} onSelectBranch={handleSelectBranch} />
+      ) : (
+        <div className="px-6 py-8 lg:px-12">
+          <EmptyState message="Nenhuma unidade disponível no momento." />
+        </div>
+      )}
 
-      <ServicesSection services={services} onAddService={handleAddService} />
+      {services.length > 0 ? (
+        <ServicesSection services={services} onAddService={handleAddService} />
+      ) : null}
 
-      <SpecialistsSection
-        specialists={specialists}
-        onSelectSpecialist={handleSelectSpecialist}
-      />
+      {specialists.length > 0 ? (
+        <SpecialistsSection specialists={specialists} onSelectSpecialist={handleSelectSpecialist} />
+      ) : null}
     </AppLayout>
   );
 };

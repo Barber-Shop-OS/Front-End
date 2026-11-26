@@ -11,7 +11,10 @@ import {
   REGISTER,
   type PersistConfig
 } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+// SEC-15 (mitigação): sessão em sessionStorage, não em localStorage. O token deixa de
+// sobreviver ao fechamento da aba e não é compartilhado entre abas. A correção completa
+// (access token só em memória + refresh token em cookie httpOnly) depende do BE-30/FE-37.
+import storage from 'redux-persist/lib/storage/session';
 import createSagaMiddleware from 'redux-saga';
 
 import { setAccessTokenGetter } from '@/services/http';
@@ -39,7 +42,7 @@ const authSanitizeTransform = createTransform(
 );
 
 const persistConfig: PersistConfig<RootReducerState> = {
-  key: 'root',
+  key: 'barberos-session',
   storage,
   whitelist: ['auth'],
   transforms: [authSanitizeTransform]

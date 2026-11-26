@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MapPin, Store, Users } from "lucide-react";
 
@@ -44,6 +44,26 @@ const NewBranchPage = (): JSX.Element => {
   const [complement, setComplement] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  // Barbearia do dono logado (GET /api/me/barbershops) — nunca um id fixo.
+  const [barbershopId, setBarbershopId] = useState<number | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    api
+      .get<{ items: { id: number; name: string }[] }>("/me/barbershops")
+      .then((response) => {
+        if (cancelled) return;
+        const first = response.data.items[0];
+        if (first) setBarbershopId(first.id);
+        else setErrorMessage("Cadastre sua barbearia antes de criar uma filial.");
+      })
+      .catch((error) => {
+        if (!cancelled) setErrorMessage(normalizeApiError(error).message);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleSave = async (): Promise<void> => {
     setErrorMessage(null);
@@ -61,12 +81,17 @@ const NewBranchPage = (): JSX.Element => {
       return;
     }
 
+    if (!barbershopId) {
+      setErrorMessage("Não foi possível identificar sua barbearia. Recarregue a página.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
       await api.post("/branch", {
         name,
-        barbershop_id: 1,
+        barbershop_id: barbershopId,
         cep,
         number: Number(number),
         city,

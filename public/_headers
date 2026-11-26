@@ -1,0 +1,12 @@
+# Cabeçalhos de segurança servidos pelo Cloudflare (Workers Static Assets) — FE-40 / SEC-17.
+# connect-src: ajuste para o domínio da API quando ele for definido (hoje aceita qualquer https).
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://accounts.google.com; frame-src https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(self), payment=()
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

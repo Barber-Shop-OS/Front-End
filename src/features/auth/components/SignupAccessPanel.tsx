@@ -6,7 +6,7 @@ import {
 import { startGoogleOAuthCodeFlow } from "@/features/auth/utils/googleAuth";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { useNavigate } from "react-router-dom";
-import { GOOGLE_CLIENT_ID } from "@/config/api";
+import { GOOGLE_AUTH_ENABLED, GOOGLE_CLIENT_ID } from "@/config/api";
 
 const SignupAccessPanel = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -71,36 +71,40 @@ const SignupAccessPanel = (): JSX.Element => {
 
         <SignupForm />
 
-        <div className="relative pt-2" aria-hidden="true">
-          <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-indigo-100" />
-          <div className="relative flex justify-center">
-            <span className="bg-slate-50 px-4 text-xs font-semibold uppercase leading-4 tracking-wide text-gray-700">
-              Ou
-            </span>
+        {GOOGLE_AUTH_ENABLED ? (
+          <>
+          <div className="relative pt-2" aria-hidden="true">
+            <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-indigo-100" />
+            <div className="relative flex justify-center">
+              <span className="bg-slate-50 px-4 text-xs font-semibold uppercase leading-4 tracking-wide text-gray-700">
+                Ou
+              </span>
+            </div>
           </div>
-        </div>
 
-        <button
-          type="button"
-          onClick={() => {
-            void handleGoogleSignup();
-          }}
-          disabled={authState.status === "loading"}
-          className="inline-flex w-full items-center justify-center gap-3 rounded-lg bg-violet-100 px-4 py-3.5 text-sm font-semibold text-gray-900 transition hover:bg-violet-200 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          <span
-            className="inline-flex h-5 w-5 items-center justify-center gap-1"
-            aria-hidden="true"
+          <button
+            type="button"
+            onClick={() => {
+              void handleGoogleSignup();
+            }}
+            disabled={authState.status === "loading"}
+            className="inline-flex w-full items-center justify-center gap-3 rounded-lg bg-violet-100 px-4 py-3.5 text-sm font-semibold text-gray-900 transition hover:bg-violet-200 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <span className="h-2 w-2 rounded-full bg-blue-500" />
-            <span className="h-2 w-3.5 rounded-full bg-green-600" />
-            <span className="h-2 w-1 rounded-full bg-yellow-500" />
-            <span className="h-2 w-3.5 rounded-full bg-red-500" />
-          </span>
-          {authState.status === "loading"
-            ? "Cadastrando..."
-            : "Cadastro com Google"}
-        </button>
+            <span
+              className="inline-flex h-5 w-5 items-center justify-center gap-1"
+              aria-hidden="true"
+            >
+              <span className="h-2 w-2 rounded-full bg-blue-500" />
+              <span className="h-2 w-3.5 rounded-full bg-green-600" />
+              <span className="h-2 w-1 rounded-full bg-yellow-500" />
+              <span className="h-2 w-3.5 rounded-full bg-red-500" />
+            </span>
+            {authState.status === "loading"
+              ? "Cadastrando..."
+              : "Cadastro com Google"}
+          </button>
+          </>
+        ) : null}
 
         <footer className="inline-flex w-full justify-center gap-1 text-sm leading-5">
           <span className="font-medium text-gray-700">Já tem uma conta?</span>

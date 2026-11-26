@@ -5,3 +5,11 @@ dist
 *.log
 *.local
 coverage
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+.env
+.env.*
+!.env.example
+*-my-pc.*
+.wrangler

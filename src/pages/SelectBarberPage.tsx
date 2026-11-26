@@ -3,51 +3,59 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import BarberCard, { Barber } from "@/features/booking/components/BarberCard";
 import BookingSummaryBar from "@/features/booking/components/BookingSummaryBar";
+import AsyncStatus from "@/components/feedback/AsyncStatus";
+import { usePublicBarbershop } from "@/features/barbershop-profile/api/publicBarbershopApi";
 import BookingLayout from "@/layouts/BookingLayout";
+import { initialsAvatar } from "@/utils/avatar";
 
-// TODO: substituir por chamada real assim que a API estiver pronta
-// (ex: useGetBarbersByBranchQuery(branchId))
-const barbers: Barber[] = [
-  {
-    id: "any",
-    name: "Qualquer Barbeiro",
-    description: "Encontraremos o profissional disponível mais rápido para você.",
-    isAnyBarber: true,
-  },
-  {
-    id: "arthur-santos",
-    name: 'Arthur "Blade" Santos',
-    description: "Especialista em Degradê e Navalha",
-    avatar: "https://i.pravatar.cc/160?img=52",
-    rating: 4.9,
-  },
-  {
-    id: "ricardo-stark",
-    name: "Ricardo Stark",
-    description: "Mestre Barbeiro & Visagista",
-    avatar: "https://i.pravatar.cc/160?img=13",
-    rating: 5.0,
-  },
-  {
-    id: "lucas-ferreira",
-    name: "Lucas Ferreira",
-    description: "Cortes Clássicos e Barba Terapia",
-    avatar: "https://i.pravatar.cc/160?img=33",
-    rating: 4.8,
-  },
-];
+const ANY_BARBER: Barber = {
+  id: "any",
+  name: "Qualquer Barbeiro",
+  description: "Encontraremos o profissional disponível mais rápido para você.",
+  isAnyBarber: true,
+};
 
 const SelectBarberPage = (): JSX.Element => {
   const navigate = useNavigate();
   const { slug } = useParams();
   const [searchParams] = useSearchParams();
 
-  // TODO: idealmente esse estado de seleção vive num slice de "booking" no
-  // Redux (persistindo entre os passos), não em useState local da página.
+  // Hooks antes de qualquer retorno antecipado.
   const [selectedBarberId, setSelectedBarberId] = useState<string | null>(null);
 
-  const serviceLabel = searchParams.get("servico") ?? "Corte de Cabelo";
-  const branchLabel = searchParams.get("filial") ?? "Unidade Central";
+  const { data: barbershop, loading, error } = usePublicBarbershop(slug);
+
+  if (loading || error || !barbershop) {
+    return (
+      <BookingLayout currentStep="barbeiro">
+        <AsyncStatus loading={loading} error={error} notFoundMessage="Barbearia não encontrada." />
+      </BookingLayout>
+    );
+  }
+
+  const branchId = searchParams.get("filial");
+  const serviceId = searchParams.get("servico");
+  const branch = barbershop.branches.find((item) => String(item.id) === branchId);
+  const service = barbershop.services.find((item) => String(item.id) === serviceId);
+  const serviceLabel = service?.name ?? "Serviço a escolher";
+  const branchLabel = branch?.name ?? "Unidade a escolher";
+
+  // Barbeiros da filial escolhida (ou de todas) que fazem o serviço escolhido.
+  const barbers: Barber[] = [
+    ANY_BARBER,
+    ...barbershop.barbers
+      .filter((barber) => !branch || barber.branch_id === branch.id)
+      .filter((barber) => !service || barber.services.some((item) => item.id === service.id))
+      .map((barber) => {
+        const name = barber.display_name ?? "Profissional";
+        return {
+          id: String(barber.id),
+          name,
+          description: barber.bio ?? barber.services.map((item) => item.name).join(" · "),
+          avatar: barber.photo_url ?? initialsAvatar(name),
+        };
+      }),
+  ];
 
   const handleNext = () => {
     if (!selectedBarberId) return;

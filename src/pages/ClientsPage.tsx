@@ -1,18 +1,17 @@
+import { Link } from "react-router-dom";
 import { ArrowRight, Filter, Search } from "lucide-react";
 import AdminLayout from "@/features/admin/components/AdminLayout";
 import { PageCard } from "@/components/ui/PageCard";
 
-const clients = [
-  ["Alexandre Silva", "+55 11 99999-1234", "12 Out 2023", "24"],
-  ["Carlos Mendes", "+55 21 98888-5678", "05 Nov 2023", "8"],
-  ["Rafael Moraes", "+55 31 97777-9012", "Hoje", "42"],
-];
+// A API ainda não tem a listagem de clientes da barbearia (FE-15 depende de endpoint no
+// backend). Até lá a página mostra estado vazio em vez de dados fictícios.
+const clients: [string, string, string, string][] = [];
 
 const ClientsPage = (): JSX.Element => (
   <AdminLayout
     title="Clientes"
     subtitle="Gerenciamento e historico de frequencia."
-    action={<button className="rounded-xl bg-[#0b4bd8] px-5 py-3 font-semibold text-white">+ Novo Agendamento</button>}
+    action={<Link to="/dashboard/agendamentos/novo" className="rounded-xl bg-[#0b4bd8] px-5 py-3 font-semibold text-white">+ Novo Agendamento</Link>}
   >
     <div className="mb-6 flex gap-3 rounded-3xl bg-white p-4 shadow-sm">
       <div className="flex flex-1 items-center gap-3 rounded-2xl bg-[#eef2ff] px-4 py-3">
@@ -27,6 +26,11 @@ const ClientsPage = (): JSX.Element => (
 
     <PageCard className="p-4">
       <div className="space-y-4">
+      {clients.length === 0 ? (
+        <p className="p-6 text-center text-slate-500">
+          Nenhum cliente para exibir ainda. A lista aparecerá aqui conforme os agendamentos forem feitos.
+        </p>
+      ) : null}
       {clients.map((client) => (
         <div
           key={client[0]}

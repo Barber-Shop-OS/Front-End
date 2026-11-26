@@ -5,7 +5,7 @@ import {
 } from "@/features/auth/slices/authSlice";
 import { startGoogleOAuthCodeFlow } from "@/features/auth/utils/googleAuth";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { GOOGLE_CLIENT_ID } from "@/config/api";
+import { GOOGLE_AUTH_ENABLED, GOOGLE_CLIENT_ID } from "@/config/api";
 import { Link } from "react-router-dom";
 
 const LoginAccessPanel = (): JSX.Element => {
@@ -66,33 +66,37 @@ const LoginAccessPanel = (): JSX.Element => {
 
         <LoginForm />
 
-        <div className="relative pt-2" aria-hidden="true">
-          <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-indigo-100" />
-          <div className="relative flex justify-center">
-            <span className="bg-slate-50 px-4 text-base font-medium leading-6 text-gray-700">
-              Ou
-            </span>
+        {GOOGLE_AUTH_ENABLED ? (
+          <>
+          <div className="relative pt-2" aria-hidden="true">
+            <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-indigo-100" />
+            <div className="relative flex justify-center">
+              <span className="bg-slate-50 px-4 text-base font-medium leading-6 text-gray-700">
+                Ou
+              </span>
+            </div>
           </div>
-        </div>
 
-        <button
-          type="button"
-          onClick={() => {
-            void handleGoogleLogin();
-          }}
-          disabled={authState.status === "loading"}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-violet-100 px-4 py-3.5 text-base font-semibold text-gray-900 transition hover:bg-violet-200"
-        >
-          <span
-            className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-gray-500 text-[10px] font-bold text-gray-700"
-            aria-hidden="true"
+          <button
+            type="button"
+            onClick={() => {
+              void handleGoogleLogin();
+            }}
+            disabled={authState.status === "loading"}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-violet-100 px-4 py-3.5 text-base font-semibold text-gray-900 transition hover:bg-violet-200"
           >
-            G
-          </span>
-          {authState.status === "loading"
-            ? "Conectando..."
-            : "Entrar com Google"}
-        </button>
+            <span
+              className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-gray-500 text-[10px] font-bold text-gray-700"
+              aria-hidden="true"
+            >
+              G
+            </span>
+            {authState.status === "loading"
+              ? "Conectando..."
+              : "Entrar com Google"}
+          </button>
+          </>
+        ) : null}
 
         <footer className="inline-flex w-full justify-center gap-1 pt-2 text-base leading-6">
           <span className="font-medium text-gray-700">
