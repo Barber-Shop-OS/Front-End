@@ -45,6 +45,7 @@ export default {
         danger: { 50: '#ffdad6', 600: '#ba1a1a', 700: '#93000a' },
       },
       fontFamily: {
+        display: ['Anton', 'Impact', 'Haettenschweiler', 'sans-serif'],
         sans: ['Inter', 'Segoe UI', 'system-ui', '-apple-system', 'Roboto', 'sans-serif'],
       },
       boxShadow: {
